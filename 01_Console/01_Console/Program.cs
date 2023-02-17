@@ -129,5 +129,35 @@
 ////{
 
 ////} while (); // while과 같은데 무조건 {}를 한번은 실행한다.
-///
 
+// 디버거
+// 단축키
+//  F5 : 디버그 시작. 브레이크 포인트에서 계속 진행하기
+//  F9 : 브레이크 포인트 설정
+//  F10 : 한 줄씩 진행하기
+//  F11 : 한 줄씩 진행하기 + 함수면 함수 안으로 들어가기
+
+// 함수
+using _01_Console;
+///
+string str;
+int number2 = 0;
+Console.Write("구구단 단수를 입력하세요 : ");
+str = Console.ReadLine();
+bool result = int.TryParse(str, out number2);
+if (result)
+{
+    GuGudan(number2);
+}
+Console.WriteLine("구구단 출력 끝");
+
+void GuGudan(int number)
+{
+    for (int i = 1; i < 10; i++)
+    {
+        Console.WriteLine($"{number} X {i} = {number * i}");
+    }
+}
+
+Car car = new Car();
+car.passenger = 20;
