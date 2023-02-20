@@ -73,7 +73,11 @@ public class Player : MonoBehaviour
         //input = Input.GetAxis("Vertical");
         //Debug.Log(input);
 
-        //transform.position += inputDir;
+        //Time.deltaTime * speed * inputDir     // 곱하기 총 4번
+        //inputDir * Time.deltaTime * speed     // 곱하기 총 6번
+
+
+        //transform.position += Time.deltaTime * speed * inputDir;
         transform.Translate(Time.deltaTime * speed * inputDir); // 초당 speed의 속도로 inputDir방향으로 이동
         // Time.deltaTime : 이전 프레임에서 현재 프레임까지의 시간
 
