@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    public float speed = 10.0f;
     PlayerInputActions inputActions;
+    Vector3 inputDir = Vector3.zero;
 
     // 이 게임 오브젝트가 생성완료 되었을 때 실행되는 함수
     private void Awake()
@@ -21,11 +25,17 @@ public class Player : MonoBehaviour
         //inputActions.Player.Fire.performed;     // 버튼을 충분히 눌렀을 때
         //inputActions.Player.Fire.canceled;      // 버튼을 땐 직후
         inputActions.Player.Fire.performed += OnFire;
+        inputActions.Player.Bomb.performed += OnBomb;
+        inputActions.Player.Move.performed += OnMoveInput;
+        inputActions.Player.Move.canceled += OnMoveInput;
     }
 
     // 이 게임 오브젝트가 비활성화 될 때 실행되는 함수
     private void OnDisable()
     {
+        inputActions.Player.Move.canceled -= OnMoveInput;
+        inputActions.Player.Move.performed -= OnMoveInput;
+        inputActions.Player.Bomb.performed -= OnBomb;
         inputActions.Player.Fire.performed -= OnFire;
         inputActions.Player.Disable();
     }
@@ -63,10 +73,29 @@ public class Player : MonoBehaviour
         //input = Input.GetAxis("Vertical");
         //Debug.Log(input);
 
+        //transform.position += inputDir;
+        transform.Translate(Time.deltaTime * speed * inputDir); // 초당 speed의 속도로 inputDir방향으로 이동
+        // Time.deltaTime : 이전 프레임에서 현재 프레임까지의 시간
+
+        // 30프레임 컴퓨터의 deltaTime = 1/30초 = 0.333333
+        // 120프레임 컴퓨터의 deltaTime = 1/120초 = 0.0083333
+
     }
 
-    private void OnFire(InputAction.CallbackContext obj)
+    private void OnFire(InputAction.CallbackContext context)
     {
         Debug.Log("Fire");
+    }
+
+    private void OnBomb(InputAction.CallbackContext context)
+    {
+        Debug.Log("Bomb");
+    }
+
+    private void OnMoveInput(InputAction.CallbackContext context)
+    {
+        Vector2 dir = context.ReadValue<Vector2>();
+        //Debug.Log(dir);
+        inputDir = dir;        
     }
 }
