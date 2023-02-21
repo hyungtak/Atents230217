@@ -8,12 +8,15 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public float speed = 10.0f;
+
+    Animator anim;
     PlayerInputActions inputActions;
     Vector3 inputDir = Vector3.zero;
 
     // 이 게임 오브젝트가 생성완료 되었을 때 실행되는 함수
     private void Awake()
     {
+        anim = GetComponent<Animator>();
         inputActions = new PlayerInputActions();
     }
 
@@ -99,7 +102,7 @@ public class Player : MonoBehaviour
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         Vector2 dir = context.ReadValue<Vector2>();
-        //Debug.Log(dir);
+        anim.SetFloat("InputY", dir.y);         // 에니메이터에 있는 InputY 파라메터에 dir.y값을 준다.
         inputDir = dir;        
     }
 }
