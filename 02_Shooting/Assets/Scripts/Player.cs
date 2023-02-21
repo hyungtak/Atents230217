@@ -8,7 +8,9 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public float speed = 10.0f;
+    public GameObject bullet;
 
+    Transform fireTransform;
     Animator anim;
     PlayerInputActions inputActions;
     Vector3 inputDir = Vector3.zero;
@@ -18,6 +20,7 @@ public class Player : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         inputActions = new PlayerInputActions();
+        fireTransform = transform.GetChild(0);        
     }
 
     // 이 게임 오브젝트가 완성된 이후에 활성화 할 때 실행되는 함수
@@ -92,6 +95,9 @@ public class Player : MonoBehaviour
     private void OnFire(InputAction.CallbackContext context)
     {
         Debug.Log("Fire");
+
+        GameObject obj = Instantiate(bullet);
+        obj.transform.position = fireTransform.position;
     }
 
     private void OnBomb(InputAction.CallbackContext context)
@@ -103,6 +109,6 @@ public class Player : MonoBehaviour
     {
         Vector2 dir = context.ReadValue<Vector2>();
         anim.SetFloat("InputY", dir.y);         // 에니메이터에 있는 InputY 파라메터에 dir.y값을 준다.
-        inputDir = dir;        
+        inputDir = dir;
     }
 }
