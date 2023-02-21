@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, 5.0f);
+        Destroy(gameObject, 5.0f);      // 5초 뒤에 이 스크립트가 들어있는 게임오브젝트를 삭제해라
     }
 
     private void Update()

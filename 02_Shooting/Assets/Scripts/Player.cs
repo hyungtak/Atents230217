@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     // 이 게임 오브젝트가 생성완료 되었을 때 실행되는 함수
     private void Awake()
     {
-        anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();            // GetComponent는 성능 문제가 있기 때문에 한번만 찾도록 코드 작성
         inputActions = new PlayerInputActions();
         fireTransform = transform.GetChild(0);        
     }

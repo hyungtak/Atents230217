@@ -12,15 +12,15 @@ public class Enemy1 : MonoBehaviour
 
     private void Start()
     {
-        baseY = transform.position.y;
+        baseY = transform.position.y;   // 시작할 때 시작한 높이 기록
     }
 
     private void Update()
     {
-        transform.Translate(Time.deltaTime* speed * -transform.right);
+        transform.Translate(Time.deltaTime* speed * -transform.right);      // 왼쪽으로 이동
+        transform.Translate(Time.deltaTime * speed * dir * transform.up);   // 위아래로 이동
 
-        transform.Translate(Time.deltaTime * speed * dir * transform.up);
-
+        // 이 게임오브젝트의 y위치가 일정 이상 올라가거나 내려가면 방향 변경
         if( (transform.position.y > baseY+height) || (transform.position.y < baseY - height) )
         {
             dir *= -1.0f;       // dir = dir * -1;
