@@ -60,11 +60,18 @@ public class Spawner : MonoBehaviour
         Gizmos.color = Color.green;
         // Gizmos.color = new Color(0, 1, 0); // rgb값으로 색상을 만들 수도 있다.
         
+        // 스폰 영역을 큐브로 그리기
+        Gizmos.DrawWireCube(transform.position, 
+            new Vector3(1, Mathf.Abs(maxY) + Mathf.Abs(minY) + 2, 1));
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
         // 스폰 지점을 선으로 긋기
         Vector3 from = transform.position + Vector3.up * minY;
         Vector3 to = transform.position + Vector3.up * maxY;
         Gizmos.DrawLine(from, to);
-
-        Gizmos.DrawWireCube(transform.position, new Vector3(1,8,1));
     }
 }
