@@ -57,14 +57,17 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        // Gizmos.color = new Color(0, 1, 0); // rgb값으로 색상을 만들 수도 있다.
+        Gizmos.color = Color.green;             // 게임 전체적으로 색상 지정됨
+        // Gizmos.color = new Color(0, 1, 0);   // rgb값으로 색상을 만들 수도 있다.
         
         // 스폰 영역을 큐브로 그리기
         Gizmos.DrawWireCube(transform.position, 
             new Vector3(1, Mathf.Abs(maxY) + Mathf.Abs(minY) + 2, 1));
     }
 
+    /// <summary>
+    /// 씬창에 개발용 정보를 그리는 함수(선택된 게임 오브젝트만 그릴때)
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

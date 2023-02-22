@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    /// <summary>
+    /// 명중 이팩트
+    /// </summary>
     public GameObject hitPrefab;
+
+    /// <summary>
+    /// 총알 이동 속도
+    /// </summary>
     public float speed = 10.0f;
 
     private void Start()
@@ -32,9 +39,9 @@ public class Bullet : MonoBehaviour
             Debug.Log($"총알이 {collision.gameObject.name}과 충돌");
             // collision.contacts[0].point : 충돌지점
 
-            GameObject obj = Instantiate(hitPrefab);
-            obj.transform.position = collision.contacts[0].point;
-            Destroy(gameObject);
+            GameObject obj = Instantiate(hitPrefab);                // hit 이팩트 생성
+            obj.transform.position = collision.contacts[0].point;   // 충돌 지점으로 이동 시키기
+            Destroy(gameObject);    // 총알 자기 자신을 지우기
         }
     }
 }
