@@ -92,6 +92,36 @@ public class Player : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log($"충돌영역에 들어감 - 충돌 대상 : {collision.gameObject.name}");
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        Debug.Log($"충돌영역에서 나감 - 충돌 대상 : {collision.gameObject.name}");        
+    }
+
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    Debug.Log("충돌영역에 접촉해 있으면서 움직이는 중");
+    //}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log($"트리거 안에 들어감 - 대상 트리거 : {collision.gameObject.name}");
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Debug.Log($"트리거에서 나감 - 대상 트리거 : {collision.gameObject.name}");        
+    }
+
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    Debug.Log("트리거 안에서 움직임");        
+    //}
+
     private void OnFire(InputAction.CallbackContext context)
     {
         Debug.Log("Fire");
