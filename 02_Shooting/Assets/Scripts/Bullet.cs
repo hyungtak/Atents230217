@@ -22,4 +22,15 @@ public class Bullet : MonoBehaviour
         // local좌표 : 각 오브젝트 별 기준으로 한 좌표계
         // world좌표 : 맵을 기준으로 한 좌표계
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if( collision.gameObject.CompareTag("Enemy") )  // 부딪친 게임오브젝트의 태그가 "Enemy"일때만 처리
+        {
+            Debug.Log($"총알이 {collision.gameObject.name}과 충돌");
+            // collision.contacts[0].point : 충돌지점
+
+            //if(collision.gameObject.tag == "Enemy")   // 절대로 하지 말것. 더 느리고 메모리도 많이 쓴다.
+        }
+    }
 }
