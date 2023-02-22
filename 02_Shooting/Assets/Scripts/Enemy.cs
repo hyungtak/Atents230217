@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
     public float amplitude = 1; // 사인 결과값을 증폭시킬 변수(위아래 차이 결정)
     public float frequency = 1; // 사인 그래프가 한번 도는데 걸리는 시간(가로 폭 결정)
 
+    public GameObject explosionPrefab;
+
     float timeElapsed = 0.0f;
     float baseY;
 
@@ -23,5 +25,15 @@ public class Enemy : MonoBehaviour
         float y = baseY + Mathf.Sin(timeElapsed) * amplitude;       // y는 시작위치에서 sin 결과값만큼 변경
 
         transform.position = new Vector3(x, y, 0);  // 구한 x,y를 이용해 높이 새로 지정
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Bullet"))
+        {
+            GameObject obj = Instantiate(explosionPrefab);
+            obj.transform.position = transform.position;
+            Destroy(gameObject);
+        }
     }
 }

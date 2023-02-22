@@ -121,3 +121,4 @@ MonoBehaviour:
   speed: 1
   amplitude: 2
   frequency: 2
+  explosionPrefab: {fileID: 3501898539053097663, guid: 404dace2075933843b25dd16613dd144, type: 3}
