@@ -16,5 +16,8 @@ public class ScoreBoard : MonoBehaviour
     private void Start()
     {
         score.text = "점수점수";
+        score.text = "점수점수";
+        score.text = "점수점수";
+        score.text = "점수점수";
     }
 }
