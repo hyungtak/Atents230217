@@ -126,6 +126,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         //Debug.Log("Start");
+        //gameObject.SetActive(false);  // 게임 오브젝트 비활성화 시키기
     }
 
     // 매 프레임마다 계속 실행되는 함수
