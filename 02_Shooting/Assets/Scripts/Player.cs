@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
             //{
             //    onScoreChange.Invoke(score);
             //}
-            onScoreChange?.Invoke(score);   // 위의 4줄을 줄인 것
+            onScoreChange?.Invoke(score);   // 위의 4줄을 줄인 것. 점수가 변경되었음을 사방에 알림.
 
             Debug.Log($"점수 : {score}");
         }
