@@ -15,6 +15,20 @@ public class ScoreBoard : MonoBehaviour
 
     private void Start()
     {
-        score.text = "점수점수";
+        //score.text = "점수점수";
+        Player player = FindObjectOfType<Player>();
+
+        // player의 onScoreChange 델리게이트가 실행될 때 RefreshScore를 실행해라
+        player.onScoreChange += RefreshScore;       
     }
+
+    /// <summary>
+    /// 새 점수로 UI 변경
+    /// </summary>
+    /// <param name="newScore">새 점수</param>
+    void RefreshScore(int newScore)
+    {
+        score.text = newScore.ToString();
+    }
+
 }

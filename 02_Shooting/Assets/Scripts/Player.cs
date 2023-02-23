@@ -42,6 +42,15 @@ public class Player : MonoBehaviour
     /// </summary>
     private int score = 0;
 
+
+    // 델리게이트(Delegate) : 신호를 보내는 것. 함수를 등록할 수 있다.
+
+    /// <summary>
+    /// 점수가 변경되면 실행될 델리게이트. 파라메터가 int 하나이고 리턴타입이 void인 함수를 등록할 수 있다.
+    /// </summary>
+    public Action<int> onScoreChange;    
+
+
     // 프로퍼티(Property) : 값을 넣거나 읽을 때 추가적으로 할일이 많을 때 사용
 
     /// <summary>
@@ -61,6 +70,12 @@ public class Player : MonoBehaviour
         private set     // 앞에 private를 붙이면 자신만 사용가능
         {
             score = value;
+            //if( onScoreChange != null )
+            //{
+            //    onScoreChange.Invoke(score);
+            //}
+            onScoreChange?.Invoke(score);   // 위의 4줄을 줄인 것
+
             Debug.Log($"점수 : {score}");
         }
     }
