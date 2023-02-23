@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     /// </summary>
     public float speed = 10.0f;
 
+    /// <summary>
+    /// 총알 발사 간격
+    /// </summary>
     public float fireInterval = 0.5f;
 
     /// <summary>
@@ -23,6 +26,11 @@ public class Player : MonoBehaviour
     /// 발사 위치 표시용 트랜스폼
     /// </summary>
     private Transform fireTransform;
+
+    /// <summary>
+    /// 총알 발사 이팩트
+    /// </summary>
+    private GameObject fireFlash;
 
     /// <summary>
     /// 에니메이터 컴포넌트
@@ -93,6 +101,8 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();            // GetComponent는 성능 문제가 있기 때문에 한번만 찾도록 코드 작성
         inputActions = new PlayerInputActions();
         fireTransform = transform.GetChild(0);
+        fireFlash = transform.GetChild(1).gameObject;        
+        fireFlash.SetActive(false);
 
         fireCoroutine = FireCoroutine();            // 코루틴 미리 만들어 놓기
     }
@@ -221,8 +231,20 @@ public class Player : MonoBehaviour
         {
             GameObject obj = Instantiate(bullet);               // 총알 생성
             obj.transform.position = fireTransform.position;    // 위치 변경
+            StartCoroutine(FlashEffect());                      // flash 이팩트 깜박이기
             yield return new WaitForSeconds(fireInterval);      // 연사 간격만큼 대기
         }
+    }
+
+    /// <summary>
+    /// flash가 깜빡하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FlashEffect()
+    {
+        fireFlash.SetActive(true);              // 켜고
+        yield return new WaitForSeconds(0.1f);  // 0.1초 대기하고
+        fireFlash.SetActive(false);             // 끄고
     }
 
     private void OnBomb(InputAction.CallbackContext context)
