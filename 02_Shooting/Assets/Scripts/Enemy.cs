@@ -41,6 +41,11 @@ public class Enemy : MonoBehaviour
     float baseY;
 
     /// <summary>
+    /// 살아있는지 여부를 나타내는 플래그(flag). true면 살아있고 false면 죽어있다.
+    /// </summary>
+    bool isAlive = true;
+
+    /// <summary>
     /// 플레이어에 대한 참조
     /// </summary>
     Player player = null;
@@ -90,14 +95,19 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void Die()
     {
-        //GameObject player = GameObject.Find("Player");                    // 이름으로 찾기
-        //GameObject player = GameObject.FindGameObjectWithTag("Player");   // 태그로 찾기
-        //Player player = FindObjectOfType<Player>();                       // 타입으로 찾기
+        if( isAlive )   // 살아있을 때만 죽이기
+        {
+            isAlive = false;    // 죽었다고 표시
 
-        player.AddScore(score);                         // 플레이어에게 점수 추가
+            //GameObject player = GameObject.Find("Player");                    // 이름으로 찾기
+            //GameObject player = GameObject.FindGameObjectWithTag("Player");   // 태그로 찾기
+            //Player player = FindObjectOfType<Player>();                       // 타입으로 찾기
 
-        GameObject obj = Instantiate(explosionPrefab);  // 폭발 이팩트 생성
-        obj.transform.position = transform.position;    // 위치는 적의 위치로 설정
-        Destroy(gameObject);                            // 적 삭제
+            player.AddScore(score);                         // 플레이어에게 점수 추가
+
+            GameObject obj = Instantiate(explosionPrefab);  // 폭발 이팩트 생성
+            obj.transform.position = transform.position;    // 위치는 적의 위치로 설정
+            Destroy(gameObject);                            // 적 삭제
+        }
     }
 }
