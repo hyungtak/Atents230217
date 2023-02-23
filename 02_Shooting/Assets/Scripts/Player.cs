@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     /// </summary>
     public float speed = 10.0f;
 
+    public float fireInterval = 0.5f;
+
     /// <summary>
     /// 플레이어의 총알 프리팹
     /// </summary>
@@ -41,6 +43,11 @@ public class Player : MonoBehaviour
     /// 플레이어의 점수
     /// </summary>
     private int score = 0;
+
+    /// <summary>
+    /// 연사용 코루틴을 저장할 변수
+    /// </summary>
+    IEnumerator fireCoroutine;
 
 
     // 델리게이트(Delegate) : 신호를 보내는 것. 함수를 등록할 수 있다.
@@ -85,7 +92,9 @@ public class Player : MonoBehaviour
     {
         anim = GetComponent<Animator>();            // GetComponent는 성능 문제가 있기 때문에 한번만 찾도록 코드 작성
         inputActions = new PlayerInputActions();
-        fireTransform = transform.GetChild(0);        
+        fireTransform = transform.GetChild(0);
+
+        fireCoroutine = FireCoroutine();            // 코루틴 미리 만들어 놓기
     }
 
     // 이 게임 오브젝트가 완성된 이후에 활성화 할 때 실행되는 함수
@@ -95,7 +104,8 @@ public class Player : MonoBehaviour
         //inputActions.Player.Fire.started;       // 버튼을 누른 직후
         //inputActions.Player.Fire.performed;     // 버튼을 충분히 눌렀을 때
         //inputActions.Player.Fire.canceled;      // 버튼을 땐 직후
-        inputActions.Player.Fire.performed += OnFire;
+        inputActions.Player.Fire.performed += OnFireStart;
+        inputActions.Player.Fire.canceled += OnFireStop;
         inputActions.Player.Bomb.performed += OnBomb;
         inputActions.Player.Move.performed += OnMoveInput;
         inputActions.Player.Move.canceled += OnMoveInput;
@@ -107,7 +117,8 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.canceled -= OnMoveInput;
         inputActions.Player.Move.performed -= OnMoveInput;
         inputActions.Player.Bomb.performed -= OnBomb;
-        inputActions.Player.Fire.performed -= OnFire;
+        inputActions.Player.Fire.canceled -= OnFireStop;
+        inputActions.Player.Fire.performed -= OnFireStart;
         inputActions.Player.Disable();
     }
 
@@ -187,12 +198,30 @@ public class Player : MonoBehaviour
     //    Debug.Log("트리거 안에서 움직임");        
     //}
 
-    private void OnFire(InputAction.CallbackContext context)
+    private void OnFireStart(InputAction.CallbackContext _)
     {
         //Debug.Log("Fire");
 
-        GameObject obj = Instantiate(bullet);
-        obj.transform.position = fireTransform.position;
+        StartCoroutine(fireCoroutine);      // 눌렀을 때 코루틴 시작
+    }
+
+    private void OnFireStop(InputAction.CallbackContext _)
+    {
+        StopCoroutine(fireCoroutine);       // 땠을 때 코루틴 정지
+    }
+
+    /// <summary>
+    /// 연사용 코루틴 함수
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FireCoroutine()
+    {
+        while (true)
+        {
+            GameObject obj = Instantiate(bullet);               // 총알 생성
+            obj.transform.position = fireTransform.position;    // 위치 변경
+            yield return new WaitForSeconds(fireInterval);      // 연사 간격만큼 대기
+        }
     }
 
     private void OnBomb(InputAction.CallbackContext context)
