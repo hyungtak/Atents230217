@@ -7,13 +7,63 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    /// <summary>
+    /// 플레이어의 이동 속도
+    /// </summary>
     public float speed = 10.0f;
+
+    /// <summary>
+    /// 플레이어의 총알 프리팹
+    /// </summary>
     public GameObject bullet;
 
-    Transform fireTransform;
-    Animator anim;
-    PlayerInputActions inputActions;
-    Vector3 inputDir = Vector3.zero;
+    /// <summary>
+    /// 발사 위치 표시용 트랜스폼
+    /// </summary>
+    private Transform fireTransform;
+
+    /// <summary>
+    /// 에니메이터 컴포넌트
+    /// </summary>
+    private Animator anim;
+
+    /// <summary>
+    /// 입력처리용 InputAction
+    /// </summary>
+    private PlayerInputActions inputActions;
+
+    /// <summary>
+    /// 현재 입력된 입력 방향
+    /// </summary>
+    private Vector3 inputDir = Vector3.zero;
+
+    /// <summary>
+    /// 플레이어의 점수
+    /// </summary>
+    private int score = 0;
+
+    // 프로퍼티(Property) : 값을 넣거나 읽을 때 추가적으로 할일이 많을 때 사용
+
+    /// <summary>
+    /// 플레이어의 점수를 확인할 수 있는 프로퍼티(읽기 전용)
+    /// </summary>
+    public int Score    
+    {
+        // get : 다른 곳에서 특정 값을 확인할 때 사용됨
+        // set : 다른 곳에서 특정 값을 설정할 때 사용됨
+
+        //get     
+        //{
+        //    return score;
+        //}
+        get => score;   // 위에 주석으로 처리된 get을 요약한 것
+
+        private set     // 앞에 private를 붙이면 자신만 사용가능
+        {
+            score = value;
+            Debug.Log($"점수 : {score}");
+        }
+    }
 
     // 이 게임 오브젝트가 생성완료 되었을 때 실행되는 함수
     private void Awake()
@@ -49,7 +99,7 @@ public class Player : MonoBehaviour
     // 시작할 때 한번 실행되는 함수
     void Start()
     {
-        Debug.Log("Start");
+        //Debug.Log("Start");
     }
 
     // 매 프레임마다 계속 실행되는 함수
@@ -94,12 +144,12 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"충돌영역에 들어감 - 충돌 대상 : {collision.gameObject.name}");
+        //Debug.Log($"충돌영역에 들어감 - 충돌 대상 : {collision.gameObject.name}");
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log($"충돌영역에서 나감 - 충돌 대상 : {collision.gameObject.name}");        
+        //Debug.Log($"충돌영역에서 나감 - 충돌 대상 : {collision.gameObject.name}");        
     }
 
     //private void OnCollisionStay2D(Collision2D collision)
@@ -109,12 +159,12 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"트리거 안에 들어감 - 대상 트리거 : {collision.gameObject.name}");
+        //Debug.Log($"트리거 안에 들어감 - 대상 트리거 : {collision.gameObject.name}");
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log($"트리거에서 나감 - 대상 트리거 : {collision.gameObject.name}");        
+        //Debug.Log($"트리거에서 나감 - 대상 트리거 : {collision.gameObject.name}");        
     }
 
     //private void OnTriggerStay2D(Collider2D collision)
@@ -124,7 +174,7 @@ public class Player : MonoBehaviour
 
     private void OnFire(InputAction.CallbackContext context)
     {
-        Debug.Log("Fire");
+        //Debug.Log("Fire");
 
         GameObject obj = Instantiate(bullet);
         obj.transform.position = fireTransform.position;
@@ -140,5 +190,14 @@ public class Player : MonoBehaviour
         Vector2 dir = context.ReadValue<Vector2>();
         anim.SetFloat("InputY", dir.y);         // 에니메이터에 있는 InputY 파라메터에 dir.y값을 준다.
         inputDir = dir;
+    }
+
+    /// <summary>
+    /// Score에 점수를 추가하는 함수
+    /// </summary>
+    /// <param name="plus">추가할 점수</param>
+    public void AddScore(int plus)
+    {
+        Score += plus;
     }
 }

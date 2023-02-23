@@ -36,7 +36,7 @@ public class Bullet : MonoBehaviour
         if( collision.gameObject.CompareTag("Enemy") )  // 부딪친 게임오브젝트의 태그가 "Enemy"일때만 처리
         //if(collision.gameObject.tag == "Enemy")       // 절대로 하지 말것. 더 느리고 메모리도 많이 쓴다.
         {
-            Debug.Log($"총알이 {collision.gameObject.name}과 충돌");
+            // Debug.Log($"총알이 {collision.gameObject.name}과 충돌");
             // collision.contacts[0].point : 충돌지점
 
             GameObject obj = Instantiate(hitPrefab);                // hit 이팩트 생성

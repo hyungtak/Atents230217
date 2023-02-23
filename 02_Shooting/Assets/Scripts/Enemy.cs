@@ -26,6 +26,11 @@ public class Enemy : MonoBehaviour
     public GameObject explosionPrefab;
 
     /// <summary>
+    /// 이 적이 죽을때 플레이어에게 주는 점수
+    /// </summary>
+    public int score = 10;
+
+    /// <summary>
     /// 누적 시간(사인 계산용)
     /// </summary>
     float timeElapsed = 0.0f;
@@ -34,6 +39,25 @@ public class Enemy : MonoBehaviour
     /// 처음 등장한 위치
     /// </summary>
     float baseY;
+
+    /// <summary>
+    /// 플레이어에 대한 참조
+    /// </summary>
+    Player player = null;
+
+    /// <summary>
+    /// player에 처음 한번만 값을 설정 가능한 프로퍼티. 쓰기 전용.
+    /// </summary>
+    public Player TargetPlayer
+    {
+        set
+        {
+            if (player == null)     // player가 null일때만 설정
+            {
+                player = value;
+            }
+        }
+    }
 
     private void Start()
     {
@@ -57,9 +81,23 @@ public class Enemy : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Bullet"))   // Bullet 태그를 가진 오브젝트와 충돌 했을 때만 실행
         {
-            GameObject obj = Instantiate(explosionPrefab);  // 폭발 이팩트 생성
-            obj.transform.position = transform.position;    // 위치는 적의 위치로 설정
-            Destroy(gameObject);                            // 적 삭제
+            Die();
         }
+    }
+
+    /// <summary>
+    /// 죽었을 때 실행되는 함수
+    /// </summary>
+    void Die()
+    {
+        //GameObject player = GameObject.Find("Player");                    // 이름으로 찾기
+        //GameObject player = GameObject.FindGameObjectWithTag("Player");   // 태그로 찾기
+        //Player player = FindObjectOfType<Player>();                       // 타입으로 찾기
+
+        player.AddScore(score);                         // 플레이어에게 점수 추가
+
+        GameObject obj = Instantiate(explosionPrefab);  // 폭발 이팩트 생성
+        obj.transform.position = transform.position;    // 위치는 적의 위치로 설정
+        Destroy(gameObject);                            // 적 삭제
     }
 }
