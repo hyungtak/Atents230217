@@ -21,6 +21,11 @@ public class PoolObject : MonoBehaviour
         onDisable?.Invoke();    // 이 델리게이트에 등록된 함수들 실행
     }
 
+    /// <summary>
+    /// 특정 시간 후에 비활성화 시키기 위한 델리게이트
+    /// </summary>
+    /// <param name="delay">딜레이시킬 시간(default = 0)</param>
+    /// <returns></returns>
     protected IEnumerator LifeOver(float delay = 0.0f)
     {
         yield return new WaitForSeconds(delay); // delay만큼 대기하고
