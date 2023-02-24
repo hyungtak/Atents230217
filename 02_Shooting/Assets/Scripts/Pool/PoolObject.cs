@@ -20,4 +20,10 @@ public class PoolObject : MonoBehaviour
     {
         onDisable?.Invoke();    // 이 델리게이트에 등록된 함수들 실행
     }
+
+    protected IEnumerator LifeOver(float delay = 0.0f)
+    {
+        yield return new WaitForSeconds(delay); // delay만큼 대기하고
+        this.gameObject.SetActive(false);       // 비활성화 시키기        
+    }
 }

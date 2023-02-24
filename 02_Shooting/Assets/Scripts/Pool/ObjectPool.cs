@@ -96,4 +96,31 @@ public class ObjectPool<T> : MonoBehaviour where T : PoolObject
             return GetObject();     // 새롭게 하나 요청
         }
     }
+
+    public T GetObject(Transform spawnTransform)
+    {
+        if (readyQueue.Count > 0)  // 큐에 오브젝트가 있는지 확인
+        {
+            T obj = readyQueue.Dequeue();   // 큐에 오브젝트가 있으면 큐에서 하나 꺼내고
+            obj.transform.position = spawnTransform.position;
+            obj.transform.rotation = spawnTransform.rotation;
+            obj.transform.localScale = spawnTransform.localScale;
+            obj.gameObject.SetActive(true); // 활성화 시킨 다음에
+            return obj;                     // 리턴
+        }
+        else
+        {
+            // 큐에 오브젝트가 없으면 풀을 두배로 늘린다.
+            int newSize = poolSize * 2;     // 새 크기 설정
+            T[] newPool = new T[newSize];   // 새 풀 생성
+            for (int i = 0; i < poolSize; i++)// 이전 풀에 있던 내용을 새 풀에 복사
+            {
+                newPool[i] = pool[i];
+            }
+            GenerateObjects(poolSize, newSize, newPool);    // 이전 풀 이후 부분에 오브젝트 생성하고 새 풀에 추가
+            pool = newPool;         // 새 풀을 풀로 설정
+            poolSize = newSize;     // 사이즈로 새 풀 크기로 설정
+            return GetObject();     // 새롭게 하나 요청
+        }
+    }
 }

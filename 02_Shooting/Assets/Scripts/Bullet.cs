@@ -46,10 +46,4 @@ public class Bullet : PoolObject
             StartCoroutine(LifeOver(0));
         }
     }
-
-    IEnumerator LifeOver(float delay = 0.0f)
-    {
-        yield return new WaitForSeconds(delay); // delay만큼 대기하고
-        this.gameObject.SetActive(false);       // 비활성화 시키기        
-    }
 }

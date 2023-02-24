@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : PoolObject
 {
     /// <summary>
     /// 적 이동 속도
@@ -64,7 +64,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
         baseY = transform.position.y;   // 시작할 때 등장한 위치 저장        
     }
@@ -107,7 +107,7 @@ public class Enemy : MonoBehaviour
 
             GameObject obj = Instantiate(explosionPrefab);  // 폭발 이팩트 생성
             obj.transform.position = transform.position;    // 위치는 적의 위치로 설정
-            Destroy(gameObject);                            // 적 삭제
+            gameObject.SetActive(false);                    // 적 풀로 되돌리기
         }
     }
 }
