@@ -46,6 +46,7 @@ public class ScoreBoard : MonoBehaviour
         {
             // currentScore를 초당 scoreUpSpeed씩 증가시킨다.
             currentScore += Time.deltaTime * scoreUpSpeed;
+            currentScore = Mathf.Min(currentScore, targetScore);  // currentScore의 최대치는 targetScore
             score.text = $"{currentScore:f0}";  // UI에 출력할 때 소수점은 0개만 출력한다.(소수점 출력안함)
         }
     }

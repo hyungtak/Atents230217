@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public BulletPool pool;
+
     /// <summary>
     /// 명중 이팩트
     /// </summary>
@@ -16,7 +18,8 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, 5.0f);      // 5초 뒤에 이 스크립트가 들어있는 게임오브젝트를 삭제해라
+        pool = FindObjectOfType<BulletPool>();
+        //Destroy(gameObject, 5.0f);      // 5초 뒤에 이 스크립트가 들어있는 게임오브젝트를 삭제해라
     }
 
     private void Update()
@@ -41,7 +44,9 @@ public class Bullet : MonoBehaviour
 
             GameObject obj = Instantiate(hitPrefab);                // hit 이팩트 생성
             obj.transform.position = collision.contacts[0].point;   // 충돌 지점으로 이동 시키기
-            Destroy(gameObject);    // 총알 자기 자신을 지우기
+            //Destroy(gameObject);    // 총알 자기 자신을 지우기
+            
+            pool.RemoveObject(this);
         }
     }
 }
