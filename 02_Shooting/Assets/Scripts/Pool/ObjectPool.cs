@@ -8,7 +8,7 @@ using UnityEngine;
 // where T : Component
 // T타입은 반드시 Component를 상속 받았어야 한다.
 
-public class ObjectPool<T> : MonoBehaviour where T : Component
+public class ObjectPool<T> : MonoBehaviour where T : PoolObject
 {
     //ArrayList listA;    // 리스트에 다 넣을 수 있다.    // 박싱 언박싱이 발생하므로 사용하지 말 것
     //List<int> list;     // 리스트에 int만 넣을 수 있다. // 제네릭 타입을 사용하는 것이 좋다.
@@ -58,9 +58,13 @@ public class ObjectPool<T> : MonoBehaviour where T : Component
         {
             GameObject obj = Instantiate(originalPrefab, transform);    // 프리팹 생성하고 풀의 자식으로 설정
             obj.gameObject.name = $"{originalPrefab.name}_{i}";         // 이름 변경
-            T comp = obj.GetComponent<T>();     // 컴포넌트 찾고
+            T comp = obj.GetComponent<T>();     // 컴포넌트 찾고(PoolObject 타입)
+
+            // 리턴타입이 void이고 파라메터가 없는 람다함수를 onDisable에 등록
+            // 델리게이트가 실행되면 readyQueue.Enqueue(comp) 실행
+            comp.onDisable += () => readyQueue.Enqueue(comp);   
+
             newArray[i] = comp;                 // 풀 배열에 넣고
-            readyQueue.Enqueue(comp);           // 레디큐에도 넣기
             obj.SetActive(false);               // 비활성화해서 안보이게 만들기
         }
     }
@@ -91,11 +95,5 @@ public class ObjectPool<T> : MonoBehaviour where T : Component
             poolSize = newSize;     // 사이즈로 새 풀 크기로 설정
             return GetObject();     // 새롭게 하나 요청
         }
-    }
-
-    public void RemoveObject(T remove)
-    {
-        readyQueue.Enqueue(remove);
-        remove.gameObject.SetActive(false);
     }
 }
