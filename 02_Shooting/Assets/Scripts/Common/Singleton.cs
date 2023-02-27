@@ -33,7 +33,7 @@ public class Singleton : MonoBehaviour
                 {
                     GameObject gameObj = new GameObject();      // 빈 오브젝트 생성
                     gameObj.name = "Singleton";                 // 이름 변경하고
-                    gameObj.AddComponent<Singleton>();          // 싱글톤을 컴포넌트로 추가
+                    obj = gameObj.AddComponent<Singleton>();          // 싱글톤을 컴포넌트로 추가
                 }
 
                 instance = obj; // 없어서 새로 만든 것이든 에디터가 만들어 놓았던 것이든 instance에 저장
