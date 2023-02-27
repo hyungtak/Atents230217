@@ -66,7 +66,7 @@ public class Enemy : PoolObject
 
     private void OnEnable()
     {
-        baseY = transform.position.y;   // 시작할 때 등장한 위치 저장        
+        baseY = transform.position.y;   // 시작할 때 등장한 위치 저장                
     }
 
     private void Update()
