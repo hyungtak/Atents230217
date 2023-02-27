@@ -64,9 +64,23 @@ public class Enemy : PoolObject
         }
     }
 
+    /// <summary>
+    /// 적이 위아래로 움직이는 기준 위치
+    /// </summary>
+    public float BaseY
+    {
+        set
+        {
+            baseY = value;                              // 값이 설정되면
+            transform.localPosition = Vector3.zero;     // 로컬 포지션 초기화
+            transform.Translate(Vector3.up * baseY);    // 설정된 높이로 위아래 변경
+        }
+    }
+
     private void OnEnable()
     {
-        baseY = transform.position.y;   // 시작할 때 등장한 위치 저장                
+        transform.localPosition = Vector3.zero; // 새로 꺼낼때 위치 초기화
+        baseY = 0.0f;                           // 기본 높이 설정
     }
 
     private void Update()

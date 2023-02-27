@@ -5,9 +5,9 @@ using UnityEngine;
 public class Bullet : PoolObject
 {
     /// <summary>
-    /// 명중 이팩트
+    /// 명중 이팩트 종류
     /// </summary>
-    public GameObject hitPrefab;
+    public PoolObjectType hitType;
 
     /// <summary>
     /// 총알 이동 속도
@@ -16,6 +16,7 @@ public class Bullet : PoolObject
 
     private void OnEnable()
     {
+        transform.localPosition = Vector3.zero; // 새로 꺼낼때 위치 초기화
         StopAllCoroutines();            // 모든 코루틴 정지시키기
         StartCoroutine(LifeOver(5.0f)); // 5초 뒤에 이 스크립트가 들어있는 게임오브젝트를 비활성화 해라
     }
@@ -40,7 +41,7 @@ public class Bullet : PoolObject
             // Debug.Log($"총알이 {collision.gameObject.name}과 충돌");
             // collision.contacts[0].point : 충돌지점
 
-            GameObject obj = Instantiate(hitPrefab);                // hit 이팩트 생성
+            GameObject obj = Factory.Inst.GetObject(hitType);       // hit 이팩트 풀에서 가져오기
             obj.transform.position = collision.contacts[0].point;   // 충돌 지점으로 이동 시키기
             //Destroy(gameObject);    // 총알 자기 자신을 지우기            
             StartCoroutine(LifeOver(0));

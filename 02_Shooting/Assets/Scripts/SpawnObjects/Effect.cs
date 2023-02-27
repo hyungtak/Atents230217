@@ -15,6 +15,7 @@ public class Effect : PoolObject
 
     private void OnEnable()
     {
+        transform.localPosition = Vector3.zero; // 새로 꺼낼때 위치 초기화
         StopAllCoroutines();
         StartCoroutine(LifeOver(anim.GetCurrentAnimatorClipInfo(0)[0].clip.length));
     }

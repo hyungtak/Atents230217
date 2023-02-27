@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // enum(이넘) 타입
-public enum PoolType
+public enum PoolObjectType
 {
     Bullet = 0,
     Hit,
@@ -11,7 +11,7 @@ public enum PoolType
     Explosion
 }
 
-public class ObjectFactory : Singleton<ObjectFactory>
+public class Factory : Singleton<Factory>
 {
     BulletPool bulletPool;
     EnemyPool enemyPool;
@@ -34,22 +34,22 @@ public class ObjectFactory : Singleton<ObjectFactory>
         hitPool?.Initialize();
     }
 
-    public PoolObject GetObject(PoolType type)
+    public GameObject GetObject(PoolObjectType type)
     {
-        PoolObject result = null;
+        GameObject result = null;
         switch (type)
         {
-            case PoolType.Bullet:
-                result = GetBullet();
+            case PoolObjectType.Bullet:
+                result = GetBullet().gameObject;
                 break;
-            case PoolType.Hit:
-                result = GetHitEffect();
+            case PoolObjectType.Hit:
+                result = GetHitEffect().gameObject;
                 break;
-            case PoolType.Enemy:
-                result = GetEnemy();
+            case PoolObjectType.Enemy:
+                result = GetEnemy().gameObject;
                 break;
-            case PoolType.Explosion:
-                result = GetExplosionEffect();
+            case PoolObjectType.Explosion:
+                result = GetExplosionEffect().gameObject;
                 break;         
         }
         return result;

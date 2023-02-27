@@ -18,9 +18,9 @@ public class Player : MonoBehaviour
     public float fireInterval = 0.5f;
 
     /// <summary>
-    /// 플레이어의 총알 프리팹
+    /// 플레이어의 총알 타입
     /// </summary>
-    public GameObject bullet;
+    public PoolObjectType bulletType;
 
     /// <summary>
     /// 발사 위치 표시용 트랜스폼
@@ -229,7 +229,7 @@ public class Player : MonoBehaviour
     {
         while (true)
         {
-            GameObject obj = Instantiate(bullet);               // 총알 생성
+            GameObject obj = Factory.Inst.GetObject(bulletType);   // bulletType에 맞는 총알 생성
             obj.transform.position = fireTransform.position;    // 위치 변경
             StartCoroutine(FlashEffect());                      // flash 이팩트 깜박이기
             yield return new WaitForSeconds(fireInterval);      // 연사 간격만큼 대기

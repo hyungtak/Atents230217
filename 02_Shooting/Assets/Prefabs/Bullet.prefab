@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49d9da19a23dbac45a268d26aceb8b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPrefab: {fileID: 6676013789098849603, guid: 9d1c60fff555f5345bc29713dc394383, type: 3}
+  hitType: 1
   speed: 10
 --- !u!50 &708943142
 Rigidbody2D:
