@@ -76,6 +76,7 @@ public class Enemy : PoolObject
     {
         transform.localPosition = Vector3.zero; // 새로 꺼낼때 위치 초기화
         baseY = 0.0f;                           // 기본 높이 설정
+        isAlive = true;                         // 다시 살았다고 표시하기
     }
 
     private void Update()
