@@ -23,7 +23,7 @@ public class Enemy : PoolObject
     /// <summary>
     /// 적이 터지는 이팩트
     /// </summary>
-    public GameObject explosionPrefab;
+    public PoolObjectType explosionType;
 
     /// <summary>
     /// 이 적이 죽을때 플레이어에게 주는 점수
@@ -65,16 +65,11 @@ public class Enemy : PoolObject
     }
 
     /// <summary>
-    /// 적이 위아래로 움직이는 기준 위치
+    /// 적이 위아래로 움직이는 기준 위치 설정하는 프로퍼티(월드 기준, 쓰기 전용)
     /// </summary>
     public float BaseY
     {
-        set
-        {
-            baseY = value;                              // 값이 설정되면
-            transform.localPosition = Vector3.zero;     // 로컬 포지션 초기화
-            transform.Translate(Vector3.up * baseY);    // 설정된 높이로 위아래 변경
-        }
+        set => baseY = value;
     }
 
     private void OnEnable()
@@ -119,7 +114,7 @@ public class Enemy : PoolObject
 
             player.AddScore(score);                         // 플레이어에게 점수 추가
 
-            GameObject obj = Instantiate(explosionPrefab);  // 폭발 이팩트 생성
+            GameObject obj = Factory.Inst.GetObject(explosionType);  // 폭발 이팩트 생성
             obj.transform.position = transform.position;    // 위치는 적의 위치로 설정
             gameObject.SetActive(false);                    // 적 풀로 되돌리기
         }
