@@ -4,8 +4,4 @@ using UnityEngine;
 
 public class HitEffectPool : ObjectPool<Effect>
 {
-    private void Start()
-    {
-        Initialize();
-    }
 }

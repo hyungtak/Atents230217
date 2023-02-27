@@ -4,8 +4,4 @@ using UnityEngine;
 
 public class ExplosionEffectPool : ObjectPool<Effect>
 {
-    private void Start()
-    {
-        Initialize();
-    }
 }
