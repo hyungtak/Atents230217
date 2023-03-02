@@ -8,6 +8,7 @@ public enum PoolObjectType
     Bullet = 0,
     Hit,
     Enemy,
+    Asteroid,
     Explosion
 }
 
@@ -21,6 +22,7 @@ public class Factory : Singleton<Factory>
     EnemyPool enemyPool;
     ExplosionEffectPool explosionPool;
     HitEffectPool hitPool;
+    AsteroidPool asteroidPool;
 
     /// <summary>
     /// 이 싱글톤이 만들어질 때 처음 한번만 호출될 함수
@@ -32,6 +34,7 @@ public class Factory : Singleton<Factory>
         enemyPool = GetComponentInChildren<EnemyPool>();
         explosionPool = GetComponentInChildren<ExplosionEffectPool>();
         hitPool = GetComponentInChildren<HitEffectPool>();
+        asteroidPool = GetComponentInChildren<AsteroidPool>();
     }
 
     /// <summary>
@@ -43,6 +46,7 @@ public class Factory : Singleton<Factory>
         enemyPool?.Initialize();
         explosionPool?.Initialize();
         hitPool?.Initialize();
+        asteroidPool?.Initialize();
     }
 
     /// <summary>
@@ -66,7 +70,10 @@ public class Factory : Singleton<Factory>
                 break;
             case PoolObjectType.Explosion:
                 result = GetExplosionEffect().gameObject;
-                break;         
+                break;
+            case PoolObjectType.Asteroid:
+                result = GetAsteroid().gameObject;
+                break;
         }
         return result;      // result를 리턴. 타입이 없는 타입이면 null
     }
@@ -94,5 +101,11 @@ public class Factory : Singleton<Factory>
     /// </summary>
     /// <returns></returns>
     public Effect GetExplosionEffect() => explosionPool?.GetObject();
+
+    /// <summary>
+    /// AsteroidPool풀에서 운석 하나 꺼내는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Asteroid GetAsteroid() => asteroidPool?.GetObject();
 
 }
