@@ -18,6 +18,10 @@ public class Asteroid : PoolObject
     /// 운석의 이동 방향
     /// </summary>
     Vector3 dir = Vector3.left;
+    public Vector3 Direction
+    {
+        set => dir = value;
+    }
 
     /// <summary>
     /// 플레이어에 대한 참조

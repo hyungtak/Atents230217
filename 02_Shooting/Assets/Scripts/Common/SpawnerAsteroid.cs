@@ -25,6 +25,11 @@ public class SpawnerAsteroid : Spawner
             float r = Random.Range(minY, maxY);                 // 랜덤하게 적용할 기준 높이 구하고
             asteroid.transform.Translate(r * Vector3.up);
 
+            Vector3 destPos = destination.position;
+            destPos.y = Random.Range(minY, maxY);
+
+            asteroid.Direction = (destPos - asteroid.transform.position).normalized;
+
             yield return new WaitForSeconds(interval);  // 인터벌만큼 대기
         }
     }
