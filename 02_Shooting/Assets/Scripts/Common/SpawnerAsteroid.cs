@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class SpawnerAsteroid : Spawner
 {
+    /// <summary>
+    /// 목적이 영역의 중심 트랜스폼
+    /// </summary>
     Transform destination;
 
     private void Awake()
     {
-        destination = transform.GetChild(0);
+        destination = transform.GetChild(0);    // 첫번째 자식 가져오기
     }
 
     protected override IEnumerator Spawn()
@@ -25,10 +28,11 @@ public class SpawnerAsteroid : Spawner
             float r = Random.Range(minY, maxY);                 // 랜덤하게 적용할 기준 높이 구하고
             asteroid.transform.Translate(r * Vector3.up);
 
-            Vector3 destPos = destination.position;
-            destPos.y = Random.Range(minY, maxY);
+            Vector3 destPos = destination.position;             // 목적지 중심지 저장
+            destPos.y = Random.Range(minY, maxY);               // 목적지의 y값만 랜덤으로 조정
 
-            asteroid.Direction = (destPos - asteroid.transform.position).normalized;
+            // 방향만 남기기 위해 normalize
+            asteroid.Direction = (destPos - asteroid.transform.position).normalized;    
 
             yield return new WaitForSeconds(interval);  // 인터벌만큼 대기
         }
@@ -38,14 +42,14 @@ public class SpawnerAsteroid : Spawner
     {
         base.OnDrawGizmos();
 
-        // 도착 영역을 큐브로 그리기
+        // 목적지 영역을 큐브로 그리기
         Gizmos.color = Color.blue;
-        if(destination == null )
+        if(destination == null)    // destination이 자식 transform이기 때문에 플레이전에는 없음
         {
-            destination = transform.GetChild(0);
+            destination = transform.GetChild(0);    // 플레이 전인 상황이라면 찾아서 넣기
         }
         Gizmos.DrawWireCube(destination.position,
-            new Vector3(1, Mathf.Abs(maxY) + Mathf.Abs(minY) + 2, 1));
+            new Vector3(1, Mathf.Abs(maxY) + Mathf.Abs(minY) + 2, 1));  // 큐브 그리기
     }
 
     protected override void OnDrawGizmosSelected()

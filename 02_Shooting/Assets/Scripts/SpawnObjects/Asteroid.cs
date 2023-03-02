@@ -1,14 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Asteroid : PoolObject
 {
+    /// <summary>
+    /// 최소 이동 속도
+    /// </summary>
     public float minMoveSpeed = 2.0f;
+
+    /// <summary>
+    /// 최대 이동 속도
+    /// </summary>
     public float maxMoveSpeed = 4.0f;
+
+    /// <summary>
+    /// 최소 회전 속도
+    /// </summary>
     public float minRotateSpeed = 30.0f;
+
+    /// <summary>
+    /// 최대 회전 속도
+    /// </summary>
     public float maxRotateSpeed = 360.0f;
 
+    /// <summary>
+    /// flip용 스프라이트 랜더러
+    /// </summary>
     SpriteRenderer spriteRenderer;
 
     /// <summary>
@@ -25,6 +44,10 @@ public class Asteroid : PoolObject
     /// 운석의 이동 방향
     /// </summary>
     Vector3 dir = Vector3.left;
+
+    /// <summary>
+    /// 운석의 이동 방향 설정용 프로퍼티
+    /// </summary>
     public Vector3 Direction
     {
         set => dir = value;
@@ -75,8 +98,9 @@ public class Asteroid : PoolObject
 
     private void Update()
     {
+        // 초당 moveSpeed의 속도로, dir 방향으로 이동 시키기
         transform.Translate(Time.deltaTime * moveSpeed * dir, Space.World);
-
+        
         //transform.Rotate(0, 0, Time.deltaTime * -rotateSpeed);  // 시계방향으로 초당 rotateSpeed씩 회전
         transform.Rotate(0, 0, Time.deltaTime * rotateSpeed);   // 반시계방향으로 초당 rotateSpeed씩 회전
     }
