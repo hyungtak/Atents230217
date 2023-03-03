@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : PoolObject
+public class Fighter : EnemyBase
 {
     /// <summary>
     /// 적 이동 속도

@@ -94,7 +94,7 @@ public class Factory : Singleton<Factory>
     /// Enemy풀에서 Enemy하나 꺼내는 함수
     /// </summary>
     /// <returns></returns>
-    public Enemy GetEnemy() => enemyPool?.GetObject();
+    public Fighter GetEnemy() => enemyPool?.GetObject();
 
     /// <summary>
     /// ExplosionEffect풀에서 ExplosionEffect하나 꺼내는 함수
