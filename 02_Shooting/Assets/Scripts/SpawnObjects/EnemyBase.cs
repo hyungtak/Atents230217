@@ -67,31 +67,53 @@ public class EnemyBase : PoolObject
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            OnHit();
+            Attacked();
         }
     }
 
-    protected virtual void OnHit()
+    /// <summary>
+    /// 공격 당하면 무조건 실행해야하는 일들
+    /// </summary>
+    void Attacked()
     {
+        OnHit();
         hitPoint--;         // 맞으면 hitPoint 감소
         if (hitPoint < 1)   // hitPoint가 0아래로 내려가면
         {
-            OnCrush();      // 파괴
+            Crush();        // 파괴
         }
     }
 
-    protected virtual void OnCrush()
+    /// <summary>
+    /// 공격 당했을 때 상속받은 클래스별로 해야하는 일들
+    /// </summary>
+    protected virtual void OnHit()
+    {
+    }
+
+    /// <summary>
+    /// 부서지면 무조건 실행해야 할 일들 처리
+    /// </summary>
+    void Crush()
     {
         if (!isCrushed)
         {
-            isCrushed = true;       // 파괴 되었다고 표시
+            isCrushed = true;               // 파괴 되었다고 표시
+            player?.AddScore(score);        // 점수 추가
 
-            player?.AddScore(score); // 점수 추가
+            OnCrush();
 
             GameObject obj = Factory.Inst.GetObject(destroyEffect); // 터지는 이팩트 생성
             obj.transform.position = transform.position;    // 이팩트 위치 변경
 
-            gameObject.SetActive(false);    // 비활성화
+            gameObject.SetActive(false);    // 비활성화 
         }
+    }
+
+    /// <summary>
+    /// 부서질때 상속받은 클래스별로 따로 처리할 일들 override해서 쓰기
+    /// </summary>
+    protected virtual void OnCrush()
+    {               
     }
 }
