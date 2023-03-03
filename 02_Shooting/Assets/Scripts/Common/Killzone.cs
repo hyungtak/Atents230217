@@ -9,7 +9,7 @@ public class Killzone : MonoBehaviour
         PoolObject comp = collision.GetComponent<PoolObject>();
         if(comp!= null)
         {
-            Debug.Log("Killzone");
+            //Debug.Log("Killzone");
             comp.gameObject.SetActive(false);
         }
     }
