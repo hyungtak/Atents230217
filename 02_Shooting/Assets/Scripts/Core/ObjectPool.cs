@@ -111,6 +111,7 @@ public class ObjectPool<T> : MonoBehaviour where T : PoolObject
     /// </summary>
     private void ExpandPool()
     {
+        Debug.LogWarning($"{this.gameObject.name} 풀 사이즈 증가");
         // 큐에 오브젝트가 없으면 풀을 두배로 늘린다.
         int newSize = poolSize * 2;     // 새 크기 설정
         T[] newPool = new T[newSize];   // 새 풀 생성

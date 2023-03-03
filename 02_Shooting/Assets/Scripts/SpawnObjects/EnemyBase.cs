@@ -41,10 +41,11 @@ public class EnemyBase : PoolObject
     Player player = null;
 
     /// <summary>
-    /// player에 처음 한번만 값을 설정 가능한 프로퍼티. 쓰기 전용.
+    /// player에 처음 한번만 값을 설정 가능한 프로퍼티. 쓰기 전용. 자신과 상속받은 클래스에서는 읽기도 가능
     /// </summary>
     public Player TargetPlayer
     {
+        protected get => player;
         set
         {
             if (player == null)     // player가 null일때만 설정
@@ -74,7 +75,7 @@ public class EnemyBase : PoolObject
     /// <summary>
     /// 공격 당하면 무조건 실행해야하는 일들
     /// </summary>
-    void Attacked()
+    protected void Attacked()
     {
         OnHit();
         hitPoint--;         // 맞으면 hitPoint 감소
@@ -94,14 +95,13 @@ public class EnemyBase : PoolObject
     /// <summary>
     /// 부서지면 무조건 실행해야 할 일들 처리
     /// </summary>
-    void Crush()
+    protected void Crush()
     {
         if (!isCrushed)
         {
-            isCrushed = true;               // 파괴 되었다고 표시
-            player?.AddScore(score);        // 점수 추가
+            isCrushed = true;               // 파괴 되었다고 표시           
 
-            OnCrush();
+            OnCrush();                      // 클래스별 별도 파괴 처리
 
             GameObject obj = Factory.Inst.GetObject(destroyEffect); // 터지는 이팩트 생성
             obj.transform.position = transform.position;    // 이팩트 위치 변경
@@ -114,6 +114,7 @@ public class EnemyBase : PoolObject
     /// 부서질때 상속받은 클래스별로 따로 처리할 일들 override해서 쓰기
     /// </summary>
     protected virtual void OnCrush()
-    {               
+    {
+        player?.AddScore(score);        // 점수 추가
     }
 }

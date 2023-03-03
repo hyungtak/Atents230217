@@ -140,7 +140,7 @@ MonoBehaviour:
   moveSpeed: 1
   score: 5
   destroyEffect: 5
-  minMoveSpeed: 2
-  maxMoveSpeed: 5
+  minMoveSpeed: 5
+  maxMoveSpeed: 7
   minRotateSpeed: 30
   maxRotateSpeed: 360

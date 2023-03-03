@@ -16,9 +16,48 @@ public class Asteroid : AsteroidBase
     /// </summary>
     public int splitCount = 3;
 
+    /// <summary>
+    /// 최소 수명
+    /// </summary>
+    public float minLifeTime = 4.0f;
+
+    /// <summary>
+    /// 최대 수명
+    /// </summary>
+    public float maxLifeTime = 7.0f;
+
+    bool isSelfCrush = false;
+
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        isSelfCrush = false;
+        float lifeTime = Random.Range(minLifeTime, maxLifeTime);
+
+        StopAllCoroutines();                    // 이전 코루틴 제거
+        StartCoroutine(SelfCrush(lifeTime));    // 새 자폭 코루틴 시작
+    }
+
+    /// <summary>
+    /// 자폭용 코루틴
+    /// </summary>
+    /// <param name="lifeTime">자폭 대기 시간</param>
+    /// <returns></returns>
+    IEnumerator SelfCrush(float lifeTime)
+    {
+        yield return new WaitForSeconds(lifeTime);
+        isSelfCrush = true;
+        Crush();
+    }
+
     protected override void OnCrush()
     {
-        base.OnCrush();
+        if(!isSelfCrush)                
+        {
+            TargetPlayer?.AddScore(score);  // 자폭이 아닐 때만 점수 추가
+        }
 
         splitCount = Random.Range(3, 8);    // 3~7개 생성
 
@@ -30,6 +69,7 @@ public class Asteroid : AsteroidBase
             GameObject obj = Factory.Inst.GetObject(childType);     // 작은 운석 생성
             obj.transform.position = transform.position;            // 위치는 우선 큰 운석 위치로
             AsteroidBase small = obj.GetComponent<AsteroidBase>();
+            small.TargetPlayer = TargetPlayer;                      // 점수 추가를 위해 플레이어 설정
 
             // Up(0,1,0) 벡터를 일단 z축을 기준으로 seed만큼 회전시키고
             // 추가로 angleGap * i만큼 더 회전 시키고
