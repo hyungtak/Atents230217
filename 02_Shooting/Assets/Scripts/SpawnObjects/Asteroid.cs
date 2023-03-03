@@ -39,7 +39,12 @@ public class Asteroid : PoolObject
     /// <summary>
     /// 운석의 HP
     /// </summary>
-    public int hitPoint = 3;
+    int hitPoint = 3;
+
+    /// <summary>
+    /// 운석의 최대 HP
+    /// </summary>
+    public int maxHitPoint = 3;
 
     /// <summary>
     /// 살아있는지 여부
@@ -118,6 +123,9 @@ public class Asteroid : PoolObject
 
         // 다시 살아난 것 표시
         isAlive = true;
+
+        // HP 최대치로 채우기
+        hitPoint = maxHitPoint;
     }
 
     private void Update()
@@ -147,7 +155,7 @@ public class Asteroid : PoolObject
     void OnHit()
     {
         hitPoint--;         // 맞으면 hitPoint 감소
-        if( hitPoint < 0 )  // hitPoint가 0아래로 내려가면
+        if( hitPoint < 1 )  // hitPoint가 0아래로 내려가면
         {
             OnDie();        // 사망
         }
