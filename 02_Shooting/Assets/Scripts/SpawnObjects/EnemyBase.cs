@@ -31,9 +31,9 @@ public class EnemyBase : PoolObject
     int hitPoint = 1;
     
     /// <summary>
-    /// 파괴되었는지 여부
+    /// 파괴되었는지 여부. true면 파괴된 상황, false면 멀쩡한 상황
     /// </summary>
-    bool isCrushed = true;
+    bool isCrushed = false;
 
     /// <summary>
     /// 플레이어에 대한 참조
@@ -56,8 +56,8 @@ public class EnemyBase : PoolObject
 
     protected virtual void OnEnable()
     {
-        // 다시 살아난 것 표시
-        isCrushed = true;
+        // 정상이 된 것 표시
+        isCrushed = false;
 
         // HP 최대치로 채우기
         hitPoint = maxHitPoint;
@@ -82,11 +82,11 @@ public class EnemyBase : PoolObject
 
     protected virtual void OnCrush()
     {
-        if (isCrushed)
+        if (!isCrushed)
         {
-            isCrushed = false;      // 파괴 되었다고 표시
+            isCrushed = true;       // 파괴 되었다고 표시
 
-            player.AddScore(score); // 점수 추가
+            player?.AddScore(score); // 점수 추가
 
             GameObject obj = Factory.Inst.GetObject(destroyEffect); // 터지는 이팩트 생성
             obj.transform.position = transform.position;    // 이팩트 위치 변경
