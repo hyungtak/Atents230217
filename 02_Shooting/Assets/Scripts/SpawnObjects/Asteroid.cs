@@ -88,8 +88,8 @@ public class Asteroid : AsteroidBase
             TargetPlayer?.AddScore(score);  // 자폭이 아닐 때만 점수 추가
         }
 
-        float random = Random.Range(0.0f, 1.0f);    // 0~1 사이의 값을 받기(0이면 0%, 1이면 100%)
-        if( random < criticalChance )               // 정해진 확률 이하면 걸린 것으로 처리
+        //float random = Random.Range(0.0f, 1.0f);  // 0~1 사이의 값을 받기(0이면 0%, 1이면 100%)
+        if( Random.value < criticalChance )         // 정해진 확률 이하면 걸린 것으로 처리
         {
             splitCount = criticalSplitCount;        // 5%를 뚫으면 20개 생성
         }

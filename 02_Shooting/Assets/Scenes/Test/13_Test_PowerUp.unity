@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 411007355}
   - component: {fileID: 411007356}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Outline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -549,7 +549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1377913214}
   - component: {fileID: 1377913215}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -737,7 +737,7 @@ GameObject:
   - component: {fileID: 1443889569}
   - component: {fileID: 1443889568}
   - component: {fileID: 1443889570}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -811,6 +811,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 108b146dd7e9d2940a36f9c28496f8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 2
+  dirChangeTime: 5
 --- !u!1001 &1743403700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -940,7 +942,7 @@ GameObject:
   - component: {fileID: 1927833516}
   - component: {fileID: 1927833518}
   - component: {fileID: 1927833517}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
