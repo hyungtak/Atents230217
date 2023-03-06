@@ -10,12 +10,7 @@ public class Asteroid : AsteroidBase
     /// 파괴 될 때 생성할 오브젝트의 종류
     /// </summary>
     public PoolObjectType childType = PoolObjectType.AsteroidSmall;
-
-    /// <summary>
-    /// 파괴 될 때 생성할 오브젝트의 갯수
-    /// </summary>
-    public int splitCount = 3;
-
+    
     /// <summary>
     /// 최소 수명
     /// </summary>
@@ -26,8 +21,35 @@ public class Asteroid : AsteroidBase
     /// </summary>
     public float maxLifeTime = 7.0f;
 
+    /// <summary>
+    /// 크리티컬이 터질 확률
+    /// </summary>
+    [Range(0f, 1f)]
+    public float criticalChance = 0.5f;
+
+    /// <summary>
+    /// 크리티컬이 터졌을 때 나올 작은 운석 갯수
+    /// </summary>
+    public int criticalSplitCount = 20;
+
+    /// <summary>
+    /// 파괴 될 때 생성할 오브젝트의 갯수
+    /// </summary>
+    int splitCount = 3;
+
+    /// <summary>
+    /// 자폭 여부 표시용 변수. true면 자폭한것, false면 플레이어가 터트린 것
+    /// </summary>
     bool isSelfCrush = false;
 
+    // 찾아놓은 컴포넌트
+    Animator anim;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        anim = GetComponent<Animator>();
+    }
 
     protected override void OnEnable()
     {
@@ -47,7 +69,9 @@ public class Asteroid : AsteroidBase
     /// <returns></returns>
     IEnumerator SelfCrush(float lifeTime)
     {
-        yield return new WaitForSeconds(lifeTime);
+        yield return new WaitForSeconds(lifeTime-1);
+        anim.SetTrigger("SelfCrush");
+        yield return new WaitForSeconds(1);
         isSelfCrush = true;
         Crush();
     }
@@ -59,7 +83,15 @@ public class Asteroid : AsteroidBase
             TargetPlayer?.AddScore(score);  // 자폭이 아닐 때만 점수 추가
         }
 
-        splitCount = Random.Range(3, 8);    // 3~7개 생성
+        float random = Random.Range(0.0f, 1.0f);
+        if( random < criticalChance )
+        {
+            splitCount = criticalSplitCount;
+        }
+        else
+        {
+            splitCount = Random.Range(3, 8);    // 3~7개 생성
+        }
 
         float angleGap = 360.0f / splitCount;       // 작은 운석간의 사이각 계산
         float seed = Random.Range(0.0f, 360.0f);    // 처음 적용할 오차 랜덤으로 구하기

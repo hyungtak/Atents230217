@@ -77,8 +77,8 @@ public class EnemyBase : PoolObject
     /// </summary>
     protected void Attacked()
     {
-        OnHit();
         hitPoint--;         // 맞으면 hitPoint 감소
+        OnHit();
         if (hitPoint < 1)   // hitPoint가 0아래로 내려가면
         {
             Crush();        // 파괴

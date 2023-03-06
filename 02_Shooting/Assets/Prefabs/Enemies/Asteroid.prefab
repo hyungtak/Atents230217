@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6395071372858201544}
   - component: {fileID: 6395071372858201546}
   - component: {fileID: 6395071372858201545}
+  - component: {fileID: 6212501331057266119}
   m_Layer: 0
   m_Name: Asteroid
   m_TagString: Enemy
@@ -136,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bd2c8fbdb7dd3f45874930e6ba37ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHitPoint: 3
+  maxHitPoint: 1
   moveSpeed: 1.5
   score: 30
   destroyEffect: 5
@@ -144,3 +145,28 @@ MonoBehaviour:
   maxMoveSpeed: 4
   minRotateSpeed: 30
   maxRotateSpeed: 360
+  childType: 4
+  minLifeTime: 4
+  maxLifeTime: 7
+  criticalChance: 0.05
+  criticalSplitCount: 20
+--- !u!95 &6212501331057266119
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6395071372858201549}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 83a69eebf936e23458cf952981d95fc2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
