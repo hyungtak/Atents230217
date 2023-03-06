@@ -38,6 +38,11 @@ public class Player : MonoBehaviour
     private Animator anim;
 
     /// <summary>
+    /// 리지드바디2D 컴포넌트
+    /// </summary>
+    private Rigidbody2D rigid;
+
+    /// <summary>
     /// 입력처리용 InputAction
     /// </summary>
     private PlayerInputActions inputActions;
@@ -99,6 +104,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         anim = GetComponent<Animator>();            // GetComponent는 성능 문제가 있기 때문에 한번만 찾도록 코드 작성
+        rigid = GetComponent<Rigidbody2D>();
         inputActions = new PlayerInputActions();
         fireTransform = transform.GetChild(0);
         fireFlash = transform.GetChild(1).gameObject;        
@@ -140,42 +146,62 @@ public class Player : MonoBehaviour
     }
 
     // 매 프레임마다 계속 실행되는 함수
-    void Update()
+    //void Update()
+    //{
+    //    // 인풋 매니저 사용 방식 - 앞으로 사용안함
+    //    //Debug.Log("Update");
+    //    //if( Input.GetKeyDown(KeyCode.W))
+    //    //{
+    //    //    Debug.Log("W키가 눌러짐");
+    //    //}
+    //    //if (Input.GetKeyDown(KeyCode.A))
+    //    //{
+    //    //    Debug.Log("A키가 눌러짐");
+    //    //}
+    //    //if (Input.GetKeyDown(KeyCode.S))
+    //    //{
+    //    //    Debug.Log("S키가 눌러짐");
+    //    //}
+    //    //if (Input.GetKeyDown(KeyCode.D))
+    //    //{
+    //    //    Debug.Log("D키가 눌러짐");
+    //    //}
+    //    //float input = Input.GetAxis("Horizontal");  // 수평 방향 처리
+    //    ////Debug.Log(input);
+    //    //// 수직 입력 처리하기
+    //    //input = Input.GetAxis("Vertical");
+    //    //Debug.Log(input);
+
+    //    //Time.deltaTime * speed * inputDir     // 곱하기 총 4번
+    //    //inputDir * Time.deltaTime * speed     // 곱하기 총 6번
+
+
+    //    //transform.position += Time.deltaTime * speed * inputDir;
+    //    //transform.Translate(Time.deltaTime * speed * inputDir); // 초당 speed의 속도로 inputDir방향으로 이동
+    //    // Time.deltaTime : 이전 프레임에서 현재 프레임까지의 시간
+
+    //    // 30프레임 컴퓨터의 deltaTime = 1/30초 = 0.333333
+    //    // 120프레임 컴퓨터의 deltaTime = 1/120초 = 0.0083333
+    //    //Debug.Log(Time.deltaTime);
+    //}
+
+    private void FixedUpdate()
     {
-        // 인풋 매니저 사용 방식 - 앞으로 사용안함
-        //Debug.Log("Update");
-        //if( Input.GetKeyDown(KeyCode.W))
-        //{
-        //    Debug.Log("W키가 눌러짐");
-        //}
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    Debug.Log("A키가 눌러짐");
-        //}
-        //if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    Debug.Log("S키가 눌러짐");
-        //}
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    Debug.Log("D키가 눌러짐");
-        //}
-        //float input = Input.GetAxis("Horizontal");  // 수평 방향 처리
-        ////Debug.Log(input);
-        //// 수직 입력 처리하기
-        //input = Input.GetAxis("Vertical");
-        //Debug.Log(input);
+        /// 항상 일정한 시간 간격으로 실행되는 업데이트
+        /// 물리 연산이 들어가는 것은 이쪽에서 실행
+        //Debug.Log(Time.fixedDeltaTime);
 
-        //Time.deltaTime * speed * inputDir     // 곱하기 총 4번
-        //inputDir * Time.deltaTime * speed     // 곱하기 총 6번
+        //rigid.MovePosition(); 
+        // 특정 위치로 순간이동 시키기.
+        // 관성이 없는 움직임을 시킬 때 유용
+        // 움직일 때 물리적으로 막히면 거기서부터는 진행을 하지 않는다.
 
+        //rigid.AddForce();
+        // 특정 방향으로 힘을 가하는 것.
+        // 관성이 있다.
+        // 움직일 때 물리적으로 막히면 거기서부터는 진행을 하지 않는다.
 
-        //transform.position += Time.deltaTime * speed * inputDir;
-        transform.Translate(Time.deltaTime * speed * inputDir); // 초당 speed의 속도로 inputDir방향으로 이동
-        // Time.deltaTime : 이전 프레임에서 현재 프레임까지의 시간
-
-        // 30프레임 컴퓨터의 deltaTime = 1/30초 = 0.333333
-        // 120프레임 컴퓨터의 deltaTime = 1/120초 = 0.0083333
+        rigid.MovePosition(transform.position + Time.fixedDeltaTime * speed * inputDir);
 
     }
 

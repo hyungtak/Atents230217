@@ -42,6 +42,11 @@ public class Asteroid : AsteroidBase
     /// </summary>
     bool isSelfCrush = false;
 
+    /// <summary>
+    /// 1초 대기용. 자주 사용하므로 미리 만들어 놓기
+    /// </summary>
+    readonly WaitForSeconds oneSecond = new WaitForSeconds(1);
+
     // 찾아놓은 컴포넌트
     Animator anim;
 
@@ -69,9 +74,9 @@ public class Asteroid : AsteroidBase
     /// <returns></returns>
     IEnumerator SelfCrush(float lifeTime)
     {
-        yield return new WaitForSeconds(lifeTime-1);
-        anim.SetTrigger("SelfCrush");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(lifeTime-1);    // 1초 전까지 대기
+        anim.SetTrigger("SelfCrush");                   // 트리거 발동 시키고
+        yield return oneSecond;                         // 1초 대기
         isSelfCrush = true;
         Crush();
     }
@@ -83,14 +88,14 @@ public class Asteroid : AsteroidBase
             TargetPlayer?.AddScore(score);  // 자폭이 아닐 때만 점수 추가
         }
 
-        float random = Random.Range(0.0f, 1.0f);
-        if( random < criticalChance )
+        float random = Random.Range(0.0f, 1.0f);    // 0~1 사이의 값을 받기(0이면 0%, 1이면 100%)
+        if( random < criticalChance )               // 정해진 확률 이하면 걸린 것으로 처리
         {
-            splitCount = criticalSplitCount;
+            splitCount = criticalSplitCount;        // 5%를 뚫으면 20개 생성
         }
         else
         {
-            splitCount = Random.Range(3, 8);    // 3~7개 생성
+            splitCount = Random.Range(3, 8);        // 아니면 3~7개 생성
         }
 
         float angleGap = 360.0f / splitCount;       // 작은 운석간의 사이각 계산
