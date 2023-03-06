@@ -58,6 +58,9 @@ TagManager:
   - name: Bullet
     uniqueID: 3546267173
     locked: 0
+  - name: PowerUp
+    uniqueID: 2673012943
+    locked: 0
   - name: Player
     uniqueID: 3603973435
     locked: 0
