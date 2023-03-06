@@ -812,7 +812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
-  dirChangeTime: 5
+  dirChangeInterval: 5
 --- !u!1001 &1743403700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1319,6 +1319,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 231204044308996586, guid: 5952798695fe9484e8be499196b2590c, type: 3}
       propertyPath: m_Name
+      value: Border
+      objectReference: {fileID: 0}
+    - target: {fileID: 231204044308996586, guid: 5952798695fe9484e8be499196b2590c, type: 3}
+      propertyPath: m_TagString
       value: Border
       objectReference: {fileID: 0}
     - target: {fileID: 231204044308996587, guid: 5952798695fe9484e8be499196b2590c, type: 3}
