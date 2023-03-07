@@ -62,21 +62,35 @@ public class Player : MonoBehaviour
     /// </summary>
     IEnumerator fireCoroutine;
 
+    /// <summary>
+    /// 현재 플레이어의 파워
+    /// </summary>
     int power = 0;
+
+    /// <summary>
+    /// 총알 간 간격
+    /// </summary>
     float fireAngle = 30.0f;
+
+    /// <summary>
+    /// 파워가 최대치일 때 파워업 아이템을 먹으면 얻는 보너스
+    /// </summary>
     int extraPowerBonus = 300;
 
+    /// <summary>
+    /// 파워를 증감시키기 위한 프로퍼티(설정시 추가처리 있음)
+    /// </summary>
     private int Power
     {
         get => power;
         set
         {
             power = value;
-            if (power > 3)
-                AddScore(extraPowerBonus);
-            power = Mathf.Clamp(power, 1, 3);
+            if (power > 3)                      // 3을 넘어가면 
+                AddScore(extraPowerBonus);      // 보너스 점수 추가
+            power = Mathf.Clamp(power, 1, 3);   // 1~3사이로 설정되게 Clamp 처리
 
-            RefreshFirePostions(power);
+            RefreshFirePostions(power);         // FireTransforms의 위치와 회전 처리
         }
     }
 
