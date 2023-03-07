@@ -29,9 +29,35 @@ public class PowerUp : PoolObject
     /// </summary>
     WaitForSeconds changeInterval;
 
+    /// <summary>
+    /// 최대 튕기는 횟수를 기록한 상수
+    /// </summary>
+    const int DirChangeCountMax = 5;
+    
+    /// <summary>
+    /// 현재 남아있는 튕길 횟수를 저장하는 변수
+    /// </summary>
+    int dirChangeCount = DirChangeCountMax;
+    
+    /// <summary>
+    /// 현재 남아있는 튕길 횟수를 저장하고 설정하는 프로퍼티
+    /// </summary>
+    int DirChangeCount
+    {
+        get => dirChangeCount;          // 읽는 건 마음대로
+        set
+        {
+            dirChangeCount = value;     // 쓸때는 0 이하가 되면 특정 행동을 처리
+            if(dirChangeCount <= 0)
+            {
+                StopAllCoroutines();    // 모든 코루틴을 정지시켜서 일정 시간간격으로 튕기는 것을 방지
+            }
+        }
+    }
+
     private void Awake()
     {
-        changeInterval = new WaitForSeconds(dirChangeInterval);
+        changeInterval = new WaitForSeconds(dirChangeInterval);        
     }
 
     private void OnEnable()
@@ -44,6 +70,7 @@ public class PowerUp : PoolObject
         }
         SetRandomDirection(true);       // 시작할 때 랜덤 방향 설정하기
 
+        DirChangeCount = DirChangeCountMax; // 튕기는 횟수 초기화
         StopAllCoroutines();            // 이전 코루틴 모두 제거
         StartCoroutine(DirChange());    // 다시 시작할 때 랜덤 방향으로
     }
@@ -71,6 +98,7 @@ public class PowerUp : PoolObject
         }
 
         dir = dir.normalized;   // 길이를 1로 만들어서 항상 동일한 속도가 되게 만들기
+        DirChangeCount--;       // 튕길 때마다 dirChangeCount 감소     
     }
 
     IEnumerator DirChange()
@@ -84,9 +112,11 @@ public class PowerUp : PoolObject
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Border"))
+        if(DirChangeCount > 0 && collision.gameObject.CompareTag("Border")) 
         {
-            dir = Vector2.Reflect(dir, collision.contacts[0].normal);   // 보더에 부딪치면 방향 전환하기
+            // 튕길 횟수가 남아있고 Border와 부딪쳤으면
+            dir = Vector2.Reflect(dir, collision.contacts[0].normal);   // 방향 전환하고
+            DirChangeCount--;                                           // dirChangeCount 감소
         }
     }
 }
