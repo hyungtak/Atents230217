@@ -15,6 +15,11 @@ public class PowerUp : PoolObject
     public float dirChangeInterval = 5.0f;
 
     /// <summary>
+    /// 마지막 단계로 강제로 설정되는 시간
+    /// </summary>
+    public float timeOut = 15.0f;
+
+    /// <summary>
     /// 플레이어의 트랜스폼
     /// </summary>
     Transform playerTransform;
@@ -48,16 +53,20 @@ public class PowerUp : PoolObject
         set
         {
             dirChangeCount = value;     // 쓸때는 0 이하가 되면 특정 행동을 처리
-            if(dirChangeCount <= 0)
+            anim.SetInteger("Count", dirChangeCount);   // 깜박이는 애니메이션 변경하기
+            if (dirChangeCount <= 0)
             {
                 StopAllCoroutines();    // 모든 코루틴을 정지시켜서 일정 시간간격으로 튕기는 것을 방지
             }
         }
     }
 
+    Animator anim;
+
     private void Awake()
     {
-        changeInterval = new WaitForSeconds(dirChangeInterval);        
+        changeInterval = new WaitForSeconds(dirChangeInterval);
+        anim = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -72,6 +81,7 @@ public class PowerUp : PoolObject
 
         DirChangeCount = DirChangeCountMax; // 튕기는 횟수 초기화
         StopAllCoroutines();            // 이전 코루틴 모두 제거
+        StartCoroutine(TimeOut());      // 타임아웃 설정
         StartCoroutine(DirChange());    // 다시 시작할 때 랜덤 방향으로
     }
 
@@ -108,6 +118,12 @@ public class PowerUp : PoolObject
             yield return changeInterval;
             SetRandomDirection();           // 랜덤하게 방향 변경하기
         }
+    }
+
+    IEnumerator TimeOut()
+    {
+        yield return new WaitForSeconds(timeOut);   // 일정 시간 지나면 자동으로 더이상 안부딪치게 하기
+        DirChangeCount = 0;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

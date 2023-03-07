@@ -812,8 +812,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 108b146dd7e9d2940a36f9c28496f8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
+  moveSpeed: 2
   dirChangeInterval: 5
+  timeOut: 15
 --- !u!95 &1443889571
 Animator:
   serializedVersion: 4
