@@ -7,50 +7,12 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    // --------------------------------------------------------------------------------------------
+    [Header("플레이어 데이터")]
     /// <summary>
     /// 플레이어의 이동 속도
     /// </summary>
     public float speed = 10.0f;
-
-    /// <summary>
-    /// 총알 발사 간격
-    /// </summary>
-    public float fireInterval = 0.5f;
-
-    /// <summary>
-    /// 플레이어의 총알 타입
-    /// </summary>
-    public PoolObjectType bulletType;
-
-    /// <summary>
-    /// 발사 위치 표시용 트랜스폼들
-    /// </summary>
-    private Transform[] fireTransforms;
-
-    /// <summary>
-    /// 총알 발사 이팩트
-    /// </summary>
-    private GameObject fireFlash;
-
-    /// <summary>
-    /// 에니메이터 컴포넌트
-    /// </summary>
-    private Animator anim;
-
-    /// <summary>
-    /// 리지드바디2D 컴포넌트
-    /// </summary>
-    private Rigidbody2D rigid;
-
-    /// <summary>
-    /// 입력처리용 InputAction
-    /// </summary>
-    private PlayerInputActions inputActions;
-
-    /// <summary>
-    /// 현재 입력된 입력 방향
-    /// </summary>
-    private Vector3 inputDir = Vector3.zero;
 
     /// <summary>
     /// 플레이어의 점수
@@ -58,56 +20,14 @@ public class Player : MonoBehaviour
     private int score = 0;
 
     /// <summary>
-    /// 연사용 코루틴을 저장할 변수
-    /// </summary>
-    IEnumerator fireCoroutine;
-
-    /// <summary>
-    /// 현재 플레이어의 파워
-    /// </summary>
-    int power = 0;
-
-    /// <summary>
-    /// 총알 간 간격
-    /// </summary>
-    float fireAngle = 30.0f;
-
-    /// <summary>
-    /// 파워가 최대치일 때 파워업 아이템을 먹으면 얻는 보너스
-    /// </summary>
-    int extraPowerBonus = 300;
-
-    /// <summary>
-    /// 파워를 증감시키기 위한 프로퍼티(설정시 추가처리 있음)
-    /// </summary>
-    private int Power
-    {
-        get => power;
-        set
-        {
-            power = value;
-            if (power > 3)                      // 3을 넘어가면 
-                AddScore(extraPowerBonus);      // 보너스 점수 추가
-            power = Mathf.Clamp(power, 1, 3);   // 1~3사이로 설정되게 Clamp 처리
-
-            RefreshFirePostions(power);         // FireTransforms의 위치와 회전 처리
-        }
-    }
-
-    // 델리게이트(Delegate) : 신호를 보내는 것. 함수를 등록할 수 있다.
-
-    /// <summary>
     /// 점수가 변경되면 실행될 델리게이트. 파라메터가 int 하나이고 리턴타입이 void인 함수를 등록할 수 있다.
     /// </summary>
-    public Action<int> onScoreChange;    
-
-
-    // 프로퍼티(Property) : 값을 넣거나 읽을 때 추가적으로 할일이 많을 때 사용
+    public Action<int> onScoreChange;
 
     /// <summary>
     /// 플레이어의 점수를 확인할 수 있는 프로퍼티(읽기 전용)
     /// </summary>
-    public int Score    
+    public int Score
     {
         // get : 다른 곳에서 특정 값을 확인할 때 사용됨
         // set : 다른 곳에서 특정 값을 설정할 때 사용됨
@@ -131,6 +51,92 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 총알 간 간격
+    /// </summary>
+    private float fireAngle = 30.0f;
+
+    /// <summary>
+    /// 파워가 최대치일 때 파워업 아이템을 먹으면 얻는 보너스
+    /// </summary>
+    private int extraPowerBonus = 300;
+
+    /// <summary>
+    /// 현재 플레이어의 파워
+    /// </summary>
+    private int power = 0;
+
+    /// <summary>
+    /// 파워를 증감시키기 위한 프로퍼티(설정시 추가처리 있음)
+    /// </summary>
+    private int Power
+    {
+        get => power;
+        set
+        {
+            power = value;
+            if (power > 3)                      // 3을 넘어가면 
+                AddScore(extraPowerBonus);      // 보너스 점수 추가
+            power = Mathf.Clamp(power, 1, 3);   // 1~3사이로 설정되게 Clamp 처리
+
+            RefreshFirePostions(power);         // FireTransforms의 위치와 회전 처리
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    [Header("총알 데이터")]
+    /// <summary>
+    /// 플레이어의 총알 타입
+    /// </summary>
+    public PoolObjectType bulletType;
+
+    /// <summary>
+    /// 총알 발사 간격
+    /// </summary>
+    public float fireInterval = 0.5f;
+
+    /// <summary>
+    /// 발사 위치 표시용 트랜스폼들
+    /// </summary>
+    private Transform[] fireTransforms;
+
+    /// <summary>
+    /// 총알 발사 이팩트
+    /// </summary>
+    private GameObject fireFlash;
+
+    /// <summary>
+    /// 연사용 코루틴을 저장할 변수
+    /// </summary>
+    IEnumerator fireCoroutine;
+
+    // --------------------------------------------------------------------------------------------
+    [Header("컴포넌트")]
+    /// <summary>
+    /// 에니메이터 컴포넌트
+    /// </summary>
+    private Animator anim;
+
+    /// <summary>
+    /// 리지드바디2D 컴포넌트
+    /// </summary>
+    private Rigidbody2D rigid;
+
+    // --------------------------------------------------------------------------------------------
+    [Header("입력 처리용")]
+    /// <summary>
+    /// 입력처리용 InputAction
+    /// </summary>
+    private PlayerInputActions inputActions;
+
+    /// <summary>
+    /// 현재 입력된 입력 방향
+    /// </summary>
+    private Vector3 inputDir = Vector3.zero;
+
+    // --------------------------------------------------------------------------------------------
+
+    // 유니티 이벤트 함수들 --------------------------------------------------------------------------------
     // 이 게임 오브젝트가 생성완료 되었을 때 실행되는 함수
     private void Awake()
     {
@@ -154,12 +160,8 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         inputActions.Player.Enable();
-        //inputActions.Player.Fire.started;       // 버튼을 누른 직후
-        //inputActions.Player.Fire.performed;     // 버튼을 충분히 눌렀을 때
-        //inputActions.Player.Fire.canceled;      // 버튼을 땐 직후
         inputActions.Player.Fire.performed += OnFireStart;
         inputActions.Player.Fire.canceled += OnFireStop;
-        inputActions.Player.Bomb.performed += OnBomb;
         inputActions.Player.Move.performed += OnMoveInput;
         inputActions.Player.Move.canceled += OnMoveInput;
     }
@@ -169,7 +171,6 @@ public class Player : MonoBehaviour
     {
         inputActions.Player.Move.canceled -= OnMoveInput;
         inputActions.Player.Move.performed -= OnMoveInput;
-        inputActions.Player.Bomb.performed -= OnBomb;
         inputActions.Player.Fire.canceled -= OnFireStop;
         inputActions.Player.Fire.performed -= OnFireStart;
         inputActions.Player.Disable();
@@ -177,76 +178,19 @@ public class Player : MonoBehaviour
 
     // 시작할 때 한번 실행되는 함수
     void Start()
-    {
-        //Debug.Log("Start");
-        //gameObject.SetActive(false);  // 게임 오브젝트 비활성화 시키기
-        
+    {        
         Power = 1;  // power는 1로 시작
     }
 
-    // 매 프레임마다 계속 실행되는 함수
-    //void Update()
-    //{
-    //    // 인풋 매니저 사용 방식 - 앞으로 사용안함
-    //    //Debug.Log("Update");
-    //    //if( Input.GetKeyDown(KeyCode.W))
-    //    //{
-    //    //    Debug.Log("W키가 눌러짐");
-    //    //}
-    //    //if (Input.GetKeyDown(KeyCode.A))
-    //    //{
-    //    //    Debug.Log("A키가 눌러짐");
-    //    //}
-    //    //if (Input.GetKeyDown(KeyCode.S))
-    //    //{
-    //    //    Debug.Log("S키가 눌러짐");
-    //    //}
-    //    //if (Input.GetKeyDown(KeyCode.D))
-    //    //{
-    //    //    Debug.Log("D키가 눌러짐");
-    //    //}
-    //    //float input = Input.GetAxis("Horizontal");  // 수평 방향 처리
-    //    ////Debug.Log(input);
-    //    //// 수직 입력 처리하기
-    //    //input = Input.GetAxis("Vertical");
-    //    //Debug.Log(input);
-
-    //    //Time.deltaTime * speed * inputDir     // 곱하기 총 4번
-    //    //inputDir * Time.deltaTime * speed     // 곱하기 총 6번
-
-
-    //    //transform.position += Time.deltaTime * speed * inputDir;
-    //    //transform.Translate(Time.deltaTime * speed * inputDir); // 초당 speed의 속도로 inputDir방향으로 이동
-    //    // Time.deltaTime : 이전 프레임에서 현재 프레임까지의 시간
-
-    //    // 30프레임 컴퓨터의 deltaTime = 1/30초 = 0.333333
-    //    // 120프레임 컴퓨터의 deltaTime = 1/120초 = 0.0083333
-    //    //Debug.Log(Time.deltaTime);
-    //}
-
+    // 일정한 시간 간격으로 호출되은 업데이트 함수(물리처리용)
     private void FixedUpdate()
     {
-        /// 항상 일정한 시간 간격으로 실행되는 업데이트
-        /// 물리 연산이 들어가는 것은 이쪽에서 실행
-        //Debug.Log(Time.fixedDeltaTime);
-
-        //rigid.MovePosition(); 
-        // 특정 위치로 순간이동 시키기.
-        // 관성이 없는 움직임을 시킬 때 유용
-        // 움직일 때 물리적으로 막히면 거기서부터는 진행을 하지 않는다.
-
-        //rigid.AddForce();
-        // 특정 방향으로 힘을 가하는 것.
-        // 관성이 있다.
-        // 움직일 때 물리적으로 막히면 거기서부터는 진행을 하지 않는다.
-
         rigid.MovePosition(transform.position + Time.fixedDeltaTime * speed * inputDir);
-
     }
 
+    // 충돌 했을 때 실행되는 함수(2D용)
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Debug.Log($"충돌영역에 들어감 - 충돌 대상 : {collision.gameObject.name}");
         if(collision.gameObject.CompareTag("PowerUp"))
         {
             Power++;
@@ -254,38 +198,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        //Debug.Log($"충돌영역에서 나감 - 충돌 대상 : {collision.gameObject.name}");        
-    }
+    // 입력 이벤트에 연결된 함수들 ----------------------------------------------------------------------------
 
-    //private void OnCollisionStay2D(Collision2D collision)
-    //{
-    //    Debug.Log("충돌영역에 접촉해 있으면서 움직이는 중");
-    //}
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //Debug.Log($"트리거 안에 들어감 - 대상 트리거 : {collision.gameObject.name}");
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //Debug.Log($"트리거에서 나감 - 대상 트리거 : {collision.gameObject.name}");        
-    }
-
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    Debug.Log("트리거 안에서 움직임");        
-    //}
-
+    // 발사 입력 처리용 함수
     private void OnFireStart(InputAction.CallbackContext _)
     {
-        //Debug.Log("Fire");
-
         StartCoroutine(fireCoroutine);      // 눌렀을 때 코루틴 시작
     }
 
+    // 발사 중지 입력 처리용 함수
     private void OnFireStop(InputAction.CallbackContext _)
     {
         StopCoroutine(fireCoroutine);       // 땠을 때 코루틴 정지
@@ -298,18 +219,40 @@ public class Player : MonoBehaviour
     IEnumerator FireCoroutine()
     {
         while (true)
-        {            
-            for(int i=0;i<power;i++)
+        {
+            for (int i = 0; i < power; i++)
             {
                 GameObject obj = Factory.Inst.GetObject(bulletType);   // bulletType에 맞는 총알 생성
                 Transform firePos = fireTransforms[i];
                 obj.transform.position = firePos.position;
                 obj.transform.rotation = firePos.rotation;
             }
-            
+
             StartCoroutine(FlashEffect());                      // flash 이팩트 깜박이기
             yield return new WaitForSeconds(fireInterval);      // 연사 간격만큼 대기
         }
+    }
+
+    /// <summary>
+    /// 이동 입력 처리용 함수
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnMoveInput(InputAction.CallbackContext context)
+    {
+        Vector2 dir = context.ReadValue<Vector2>();
+        anim.SetFloat("InputY", dir.y);         // 에니메이터에 있는 InputY 파라메터에 dir.y값을 준다.
+        inputDir = dir;
+    }
+
+    // 기타 함수 --------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Score에 점수를 추가하는 함수
+    /// </summary>
+    /// <param name="plus">추가할 점수</param>
+    public void AddScore(int plus)
+    {
+        Score += plus;
     }
 
     /// <summary>
@@ -321,29 +264,12 @@ public class Player : MonoBehaviour
         fireFlash.SetActive(true);              // 켜고
         yield return new WaitForSeconds(0.1f);  // 0.1초 대기하고
         fireFlash.SetActive(false);             // 끄고
-    }
-
-    private void OnBomb(InputAction.CallbackContext context)
-    {
-        Debug.Log("Bomb");
-    }
-
-    private void OnMoveInput(InputAction.CallbackContext context)
-    {
-        Vector2 dir = context.ReadValue<Vector2>();
-        anim.SetFloat("InputY", dir.y);         // 에니메이터에 있는 InputY 파라메터에 dir.y값을 준다.
-        inputDir = dir;
-    }
+    }    
 
     /// <summary>
-    /// Score에 점수를 추가하는 함수
+    /// 파워에 따라 발사 위치 조정하는 함수
     /// </summary>
-    /// <param name="plus">추가할 점수</param>
-    public void AddScore(int plus)
-    {
-        Score += plus;
-    }
-
+    /// <param name="power">현재 적용된 파워</param>
     private void RefreshFirePostions(int power)
     {
         // 기존 fireRoot의 자식 비활성화 하기
@@ -363,15 +289,6 @@ public class Player : MonoBehaviour
             firePos.localPosition = Vector3.zero;
             firePos.rotation = Quaternion.Euler(0, 0, (power - 1) * (fireAngle * 0.5f) + i * -fireAngle);
             firePos.Translate(1, 0, 0);
-
-            // 파워1 : (1 - 1) * (30 * 0.5f) + 0 * -30 = 0
-            // 파워2
-            //  i = 0) (2 - 1) * (30 * 0.5f) + 0 * -30 = 15
-            //  i = 1) (2 - 1) * (30 * 0.5f) + 1 * -30 = -15
-            // 파워3
-            //  i = 0) (3 - 1) * (30 * 0.5f) + 0 * -30 = 30
-            //  i = 1) (3 - 1) * (30 * 0.5f) + 1 * -30 = 0
-            //  i = 2) (3 - 1) * (30 * 0.5f) + 2 * -30 = -30
 
             fireTransforms[i].gameObject.SetActive(true);
         }
