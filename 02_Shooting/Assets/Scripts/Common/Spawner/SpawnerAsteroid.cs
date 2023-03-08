@@ -14,27 +14,22 @@ public class SpawnerAsteroid : Spawner
         destination = transform.GetChild(0);    // 첫번째 자식 가져오기
     }
 
-    protected override IEnumerator Spawn()
+    protected override void OnSpawn(EnemyBase enemy)
     {
-        while (true)     // 무한 반복(무한루프)
+        base.OnSpawn(enemy);
+
+        Vector3 destPos = destination.position;             // 목적지 중심지 저장
+        destPos.y = Random.Range(minY, maxY);               // 목적지의 y값만 랜덤으로 조정
+
+        Asteroid asteroid = enemy as Asteroid;              // enemy가 Asteroid 타입이 맞으면 캐스팅
+        if( asteroid != null)
         {
-            // 생성하고 생성한 오브젝트를 스포너의 자식으로 만들기
-            GameObject obj = Factory.Inst.GetObject(objectType);
-
-            Asteroid asteroid = obj.GetComponent<Asteroid>();   // 생성한 게임오브젝트에서 asteroid 컴포넌트 가져오기
-            asteroid.TargetPlayer = player;                     // asteroid에 플레이어 설정
-
-            asteroid.transform.position = transform.position;   // 스포너 위치로 이동
-            float r = Random.Range(minY, maxY);                 // 랜덤하게 적용할 기준 높이 구하고
-            asteroid.transform.Translate(r * Vector3.up);
-
-            Vector3 destPos = destination.position;             // 목적지 중심지 저장
-            destPos.y = Random.Range(minY, maxY);               // 목적지의 y값만 랜덤으로 조정
-
             // 방향만 남기기 위해 normalize
-            asteroid.Direction = (destPos - asteroid.transform.position).normalized;    
-
-            yield return new WaitForSeconds(interval);  // 인터벌만큼 대기
+            asteroid.Direction = (destPos - enemy.transform.position).normalized;
+        }
+        else
+        {
+            Debug.LogError("SpawnerAsteroid : 운석이 아닌데 스폰하려고 함");
         }
     }
 
