@@ -334,7 +334,7 @@ public class Player : MonoBehaviour
     {
         gameObject.layer = LayerMask.NameToLayer("Invincible"); // 레이어를 무적 레이어로 변경
         isInvincibleMode = true;    // 무적 모드로 들어갔다고 표시
-        timeElapsed = 0.0f;         // 시간 카운터 초기화
+        timeElapsed = 0.0f;         // cos용 시간 카운터 초기화
 
         yield return new WaitForSeconds(invincibleTime);        // invincibleTime만큼 기다리기
 
