@@ -19,7 +19,7 @@ public class SpawnerAsteroid : Spawner
         while (true)     // 무한 반복(무한루프)
         {
             // 생성하고 생성한 오브젝트를 스포너의 자식으로 만들기
-            GameObject obj = Factory.Inst.GetObject(PoolObjectType.Asteroid);
+            GameObject obj = Factory.Inst.GetObject(objectType);
 
             Asteroid asteroid = obj.GetComponent<Asteroid>();   // 생성한 게임오브젝트에서 asteroid 컴포넌트 가져오기
             asteroid.TargetPlayer = player;                     // asteroid에 플레이어 설정

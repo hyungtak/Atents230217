@@ -8,6 +8,7 @@ public enum PoolObjectType
     Bullet = 0,
     Hit,
     Enemy,
+    SpecialFighter,
     Asteroid,
     AsteroidSmall,
     Explosion,
@@ -22,6 +23,7 @@ public class Factory : Singleton<Factory>
     // 생성할 오브젝트의 풀들
     BulletPool bulletPool;
     EnemyPool enemyPool;
+    SpecialFighterPool specialFighterPool;
     ExplosionEffectPool explosionPool;
     HitEffectPool hitPool;
     AsteroidPool asteroidPool;
@@ -36,6 +38,7 @@ public class Factory : Singleton<Factory>
         // 자식으로 붙어있는 풀들 다 찾아놓기
         bulletPool = GetComponentInChildren<BulletPool>();
         enemyPool = GetComponentInChildren<EnemyPool>();
+        specialFighterPool = GetComponentInChildren<SpecialFighterPool>();
         explosionPool = GetComponentInChildren<ExplosionEffectPool>();
         hitPool = GetComponentInChildren<HitEffectPool>();
         asteroidPool = GetComponentInChildren<AsteroidPool>();
@@ -50,6 +53,7 @@ public class Factory : Singleton<Factory>
     {
         bulletPool?.Initialize();       // ?.은 null이 아니면 실행, null이면 아무것도 하지 않는다.
         enemyPool?.Initialize();
+        specialFighterPool?.Initialize();
         explosionPool?.Initialize();
         hitPool?.Initialize();
         asteroidPool?.Initialize();
@@ -75,6 +79,9 @@ public class Factory : Singleton<Factory>
                 break;
             case PoolObjectType.Enemy:
                 result = GetEnemy().gameObject;
+                break;
+            case PoolObjectType.SpecialFighter:
+                result = GetSpecialFigher().gameObject;
                 break;
             case PoolObjectType.Explosion:
                 result = GetExplosionEffect().gameObject;
@@ -109,6 +116,12 @@ public class Factory : Singleton<Factory>
     /// </summary>
     /// <returns></returns>
     public Fighter GetEnemy() => enemyPool?.GetObject();
+
+    /// <summary>
+    /// specialFighterPool에서 특수적 하나 꺼내는 함수
+    /// </summary>
+    /// <returns></returns>
+    public SpecialFighter GetSpecialFigher() => specialFighterPool?.GetObject();
 
     /// <summary>
     /// ExplosionEffect풀에서 ExplosionEffect하나 꺼내는 함수

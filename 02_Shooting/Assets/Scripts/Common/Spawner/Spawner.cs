@@ -6,9 +6,9 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     /// <summary>
-    /// 생성할 게임 오브젝트
+    /// 생성할 오브젝트의 타입
     /// </summary>
-    public GameObject spawnPrefab;
+    public PoolObjectType objectType;
 
     /// <summary>
     /// 생성할 위치(최소값)

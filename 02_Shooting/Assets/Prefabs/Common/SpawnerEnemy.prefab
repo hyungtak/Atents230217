@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5785132610527047859}
-  - component: {fileID: 8473735508362420802}
+  - component: {fileID: 1210787144}
   m_Layer: 0
   m_Name: SpawnerEnemy
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8473735508362420802
+--- !u!114 &1210787144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,10 +41,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5785132610527047857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec160854708e36649881ee0acdf5ebf8, type: 3}
+  m_Script: {fileID: 11500000, guid: 84f74c881b91116449a6760ad7f109f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefab: {fileID: 7440216545964041471, guid: 7ff3b85f402176d4eaaf538d3aca9385, type: 3}
+  objectType: 3
   minY: -4
   maxY: 4
   interval: 1
