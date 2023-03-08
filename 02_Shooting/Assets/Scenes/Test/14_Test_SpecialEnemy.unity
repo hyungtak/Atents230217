@@ -758,6 +758,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3437175952084198756, guid: 07b2cc3fa1235904ba105692970ec0db, type: 3}
+      propertyPath: invincibleTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3437175952084198757, guid: 07b2cc3fa1235904ba105692970ec0db, type: 3}
       propertyPath: m_RootOrder
       value: 7

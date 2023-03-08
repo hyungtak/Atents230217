@@ -15,6 +15,69 @@ public class Player : MonoBehaviour
     public float speed = 10.0f;
 
     /// <summary>
+    /// 피격 되었을 때의 무적 시간
+    /// </summary>
+    public float invincibleTime = 2.0f;
+
+    /// <summary>
+    /// 무적 상태인지 아닌지 표시용.
+    /// </summary>
+    private bool isInvincibleMode = false;
+
+    /// <summary>
+    /// 무적일 때 시간 누적용(cos에서 사용할 용도)
+    /// </summary>
+    private float timeElapsed = 0.0f;
+
+    /// <summary>
+    /// 시작할 때 생명
+    /// </summary>
+    public int initialLife = 3;
+
+    /// <summary>
+    /// 현재 생명
+    /// </summary>
+    private int life = 3;
+
+    /// <summary>
+    /// 사망 표시
+    /// </summary>
+    private bool isDead = false;
+
+    /// <summary>
+    /// 수명 처리용 프로퍼티
+    /// </summary>
+    private int Life
+    {
+        get => life;
+        set
+        {
+            if(!isDead)
+            {
+                if( life > value)
+                {
+                    // 라이프가 감소한 상황이면
+                    OnHit();    // 맞았을 때의 동작이 있는 함수 실행
+                }
+
+                life = value;
+                Debug.Log($"Life : {life}");
+
+                if( life <= 0 )
+                {
+                    OnDie();    // 죽었을 때의 동작이 있는 함수 실행
+                }
+                onLifeChange?.Invoke( life );   // 델리게이트에 연결된 함수들 실행
+            }
+        }
+    }
+
+    /// <summary>
+    /// 수명이 변경되었을 때 실행될 델리게이트
+    /// </summary>
+    public Action<int> onLifeChange;
+
+    /// <summary>
     /// 플레이어의 점수
     /// </summary>
     private int score = 0;
@@ -29,25 +92,12 @@ public class Player : MonoBehaviour
     /// </summary>
     public int Score
     {
-        // get : 다른 곳에서 특정 값을 확인할 때 사용됨
-        // set : 다른 곳에서 특정 값을 설정할 때 사용됨
-
-        //get     
-        //{
-        //    return score;
-        //}
         get => score;   // 위에 주석으로 처리된 get을 요약한 것
 
         private set     // 앞에 private를 붙이면 자신만 사용가능
         {
             score = value;
-            //if( onScoreChange != null )
-            //{
-            //    onScoreChange.Invoke(score);
-            //}
             onScoreChange?.Invoke(score);   // 위의 4줄을 줄인 것. 점수가 변경되었음을 사방에 알림.
-
-            Debug.Log($"점수 : {score}");
         }
     }
 
@@ -122,6 +172,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private Rigidbody2D rigid;
 
+    /// <summary>
+    /// 스프라이트 랜더러 컴포넌트
+    /// </summary>
+    private SpriteRenderer spriteRenderer;
+
     // --------------------------------------------------------------------------------------------
     [Header("입력 처리용")]
     /// <summary>
@@ -142,6 +197,7 @@ public class Player : MonoBehaviour
     {
         anim = GetComponent<Animator>();            // GetComponent는 성능 문제가 있기 때문에 한번만 찾도록 코드 작성
         rigid = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         inputActions = new PlayerInputActions();
         Transform fireRoot = transform.GetChild(0);
         fireTransforms = new Transform[fireRoot.childCount];
@@ -180,6 +236,17 @@ public class Player : MonoBehaviour
     void Start()
     {        
         Power = 1;  // power는 1로 시작
+        life = initialLife; // 초기 생명 설정
+    }
+
+    private void Update()
+    {
+        if( isInvincibleMode )
+        {
+            timeElapsed += Time.deltaTime * 30;     // 1초당으로 처리하면 한번 깜박이는데 3.141592... 초가 필요
+            float alpha = (MathF.Cos(timeElapsed) + 1.0f) * 0.5f;   // cos 결과를 1~0~1로 변경
+            spriteRenderer.color = new Color(1, 1, 1, alpha);
+        }
     }
 
     // 일정한 시간 간격으로 호출되은 업데이트 함수(물리처리용)
@@ -191,7 +258,11 @@ public class Player : MonoBehaviour
     // 충돌 했을 때 실행되는 함수(2D용)
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("PowerUp"))
+        if( collision.gameObject.CompareTag("Enemy"))
+        {
+            Life--;
+        }
+        else if(collision.gameObject.CompareTag("PowerUp"))
         {
             Power++;
             collision.gameObject.SetActive(false);
@@ -242,6 +313,40 @@ public class Player : MonoBehaviour
         Vector2 dir = context.ReadValue<Vector2>();
         anim.SetFloat("InputY", dir.y);         // 에니메이터에 있는 InputY 파라메터에 dir.y값을 준다.
         inputDir = dir;
+    }
+
+    // 피격 관련 -----------------------------------------------------------------------------------
+
+    /// <summary>
+    /// 맞았을 때 실행되는 함수
+    /// </summary>
+    private void OnHit()
+    {
+        Power--;                                // 파워1 줄이고
+        StartCoroutine(EnterInvincibleMode());  // 무적 모드 들어가기
+    }
+
+    /// <summary>
+    /// 무적 상태 진입용 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator EnterInvincibleMode()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Invincible"); // 레이어를 무적 레이어로 변경
+        isInvincibleMode = true;    // 무적 모드로 들어갔다고 표시
+        timeElapsed = 0.0f;         // 시간 카운터 초기화
+
+        yield return new WaitForSeconds(invincibleTime);        // invincibleTime만큼 기다리기
+
+        spriteRenderer.color = Color.white;                     // 색이 변한 상태에서 무적모드가 끝날 때를 대비해서 색상도 초기화
+        isInvincibleMode = false;                               // 무적 모드 끝났다고 표시
+        gameObject.layer = LayerMask.NameToLayer("Player");     // 레이어 되돌리기
+    }
+
+    private void OnDie()
+    {
+        isDead = true;
+        life = 0;
     }
 
     // 기타 함수 --------------------------------------------------------------------------------------
