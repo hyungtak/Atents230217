@@ -8,7 +8,7 @@ public class ScoreBoard : MonoBehaviour
     /// <summary>
     /// 점수가 올라가는 속도
     /// </summary>
-    public float scoreUpSpeed = 50.0f;
+    public float minScoreUpSpeed = 50.0f;
 
     /// <summary>
     /// 현재 UI에서 보이는 점수
@@ -44,8 +44,10 @@ public class ScoreBoard : MonoBehaviour
     {
         if( currentScore < targetScore )        // currentScore가 targetScore보다 작으면
         {
-            // currentScore를 초당 scoreUpSpeed씩 증가시킨다.
-            currentScore += Time.deltaTime * scoreUpSpeed;
+            // currentScore를 점수 차이에 비례해서 증가시킨다.(최저 minScoreUpSpeed)
+            float speed = Mathf.Max((targetScore - currentScore) * 5.0f, minScoreUpSpeed);            
+            currentScore += Time.deltaTime * speed;
+
             currentScore = Mathf.Min(currentScore, targetScore);  // currentScore의 최대치는 targetScore
             score.text = $"{currentScore:f0}";  // UI에 출력할 때 소수점은 0개만 출력한다.(소수점 출력안함)
         }
