@@ -1053,6 +1053,7 @@ GameObject:
   - component: {fileID: 2047904613}
   - component: {fileID: 2047904612}
   - component: {fileID: 2047904611}
+  - component: {fileID: 2047904614}
   m_Layer: 5
   m_Name: LifePanel
   m_TagString: Untagged
@@ -1147,6 +1148,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047904609}
   m_CullTransparentMesh: 1
+--- !u!114 &2047904614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047904609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fea1ac747b1cf1048b4d0ef15ab31821, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2124870109
 PrefabInstance:
   m_ObjectHideFlags: 0

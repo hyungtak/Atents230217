@@ -236,8 +236,8 @@ public class Player : MonoBehaviour
     // 시작할 때 한번 실행되는 함수
     void Start()
     {        
-        Power = 1;  // power는 1로 시작
-        life = initialLife; // 초기 생명 설정
+        Power = 1;          // power는 1로 시작
+        Life = initialLife; // 초기 생명 설정
     }
 
     private void Update()
