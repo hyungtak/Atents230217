@@ -44,7 +44,6 @@ public class RankPanel : MonoBehaviour
                 temp = (char)((byte)temp + i);
                 rankerNames[i] = $"{temp}{temp}{temp}";     // AAA,BBB,CCC,DDD,EEE
             }
-
         }
     }
 
@@ -56,6 +55,13 @@ public class RankPanel : MonoBehaviour
     bool LoadRankingData()
     {
         return false;
+    }
+
+    void RefreshRankLines()
+    {
+        //rankLines;
+        //highScores;
+        //rankerNames;
     }
 
 }
