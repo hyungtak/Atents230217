@@ -45,6 +45,11 @@ public class Player : MonoBehaviour
     private bool isDead = false;
 
     /// <summary>
+    /// 플레이어 비행기 터지는 이팩트
+    /// </summary>
+    public PoolObjectType explosion = PoolObjectType.Explosion;
+
+    /// <summary>
     /// 수명 처리용 프로퍼티
     /// </summary>
     private int Life
@@ -225,11 +230,7 @@ public class Player : MonoBehaviour
     // 이 게임 오브젝트가 비활성화 될 때 실행되는 함수
     private void OnDisable()
     {
-        inputActions.Player.Move.canceled -= OnMoveInput;
-        inputActions.Player.Move.performed -= OnMoveInput;
-        inputActions.Player.Fire.canceled -= OnFireStop;
-        inputActions.Player.Fire.performed -= OnFireStart;
-        inputActions.Player.Disable();
+        InputDisable();
     }
 
     // 시작할 때 한번 실행되는 함수
@@ -252,7 +253,15 @@ public class Player : MonoBehaviour
     // 일정한 시간 간격으로 호출되은 업데이트 함수(물리처리용)
     private void FixedUpdate()
     {
-        rigid.MovePosition(transform.position + Time.fixedDeltaTime * speed * inputDir);
+        if (isDead)
+        {
+            rigid.AddForce(Vector2.left * 0.3f, ForceMode2D.Impulse);  // 왼쪽으로 폭팔적으로 힘 추가
+            rigid.AddTorque(30.0f);     // 반시계 방향으로 회전
+        }
+        else
+        {
+            rigid.MovePosition(transform.position + Time.fixedDeltaTime * speed * inputDir);
+        }
     }
 
     // 충돌 했을 때 실행되는 함수(2D용)
@@ -315,6 +324,18 @@ public class Player : MonoBehaviour
         inputDir = dir;
     }
 
+    /// <summary>
+    /// 입력 연결 끊고 비활성화 시키기
+    /// </summary>
+    private void InputDisable()
+    {
+        inputActions.Player.Move.canceled -= OnMoveInput;
+        inputActions.Player.Move.performed -= OnMoveInput;
+        inputActions.Player.Fire.canceled -= OnFireStop;
+        inputActions.Player.Fire.performed -= OnFireStart;
+        inputActions.Player.Disable();
+    }
+
     // 피격 관련 -----------------------------------------------------------------------------------
 
     /// <summary>
@@ -347,6 +368,25 @@ public class Player : MonoBehaviour
     {
         isDead = true;
         life = 0;
+
+        Collider2D bodyCollider = GetComponent<Collider2D>();
+        bodyCollider.enabled = false;                           // 컬라이더 꺼서 양향력 제거
+
+        GameObject effect = Factory.Inst.GetObject(explosion);  // 터지는 이팩트 만들고
+        effect.transform.position = transform.position;         // 이팩트 내 위치에 배치
+
+        InputDisable();                 // 입력 막기
+        inputDir = Vector3.zero;        // 이동 입력도 초기화
+
+        StopCoroutine(fireCoroutine);   // 총을 쏘던 중이면 더 이상 쏘지 않게 만들기
+
+        // 무적모드 취소
+        spriteRenderer.color = Color.white;                     
+        isInvincibleMode = false;
+        gameObject.layer = LayerMask.NameToLayer("Player");
+
+        rigid.gravityScale = 1.0f;      // 중력 다시 적용
+        rigid.freezeRotation = false;   // 회전도 풀기
     }
 
     // 기타 함수 --------------------------------------------------------------------------------------
