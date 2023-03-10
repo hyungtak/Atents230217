@@ -2,14 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameOverPanel : MonoBehaviour
 {
     Animator anim;
+    Button button;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        button = GetComponentInChildren<Button>();
+        button.onClick.AddListener(OnRestart);      // 버튼 클릭 이벤트에 함수 등록
     }
 
     private void Start()
@@ -17,6 +22,11 @@ public class GameOverPanel : MonoBehaviour
         Player player = FindObjectOfType<Player>();
         player.onDie += (_) => ShowPanel();      // 플레이어의 onDie 델리게이트에 함수 등록
         //gameObject.SetActive(false);    // 게임 오브젝트 비활성화
+    }
+
+    private void OnRestart()
+    {
+        SceneManager.LoadScene(0);  // 0번씬 불러오기
     }
 
     private void ShowPanel()
