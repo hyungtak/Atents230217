@@ -831,7 +831,7 @@ CanvasGroup:
   m_GameObject: {fileID: 1899167637}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 0
+  m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!224 &1938361243 stripped
@@ -1314,6 +1314,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1899167638}
     m_Modifications:
+    - target: {fileID: 947819115, guid: 1ce77ff745834404ba63f9f55401e41a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 947819117, guid: 1ce77ff745834404ba63f9f55401e41a, type: 3}
+      propertyPath: m_CharacterLimit
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 947819118, guid: 1ce77ff745834404ba63f9f55401e41a, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1479943735778754046, guid: 1ce77ff745834404ba63f9f55401e41a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

@@ -18,6 +18,11 @@ public class Test_GameOver : Test_Base
 
     protected override void Test1(InputAction.CallbackContext _)
     {
+        player.AddScore(700);
+    }
+
+    protected override void Test4(InputAction.CallbackContext _)
+    {
         string path = $"{Application.dataPath}/Save/";      // 경로
         string fullPath = $"{path}TestSave.json";           // 전체 경로
 
@@ -32,7 +37,7 @@ public class Test_GameOver : Test_Base
         Debug.Log("세이브 완료");
     }
 
-    protected override void Test2(InputAction.CallbackContext _)
+    protected override void Test5(InputAction.CallbackContext _)
     {
         string path = $"{Application.dataPath}/Save/";      // 경로
         string fullPath = $"{path}TestSave.json";           // 전체 경로

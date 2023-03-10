@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RankPanel : MonoBehaviour
 {
@@ -21,15 +24,86 @@ public class RankPanel : MonoBehaviour
     /// </summary>
     string[] rankerNames = null;
 
-    private void Awake()
-    {        
-        rankLines = GetComponentsInChildren<RankLine>();    // 모든 랭킹 라인 다 가져오기
+    /// <summary>
+    /// 최대 랭킹 표시 수
+    /// </summary>
+    int rankCount = 5;
 
-        int size = rankLines.Length;
-        highScores = new int[size];     // 배열 확보
-        rankerNames = new string[size];
+    /// <summary>
+    /// 랭킹이 업데이트 되지 않았음을 표시하는 상수
+    /// </summary>
+    const int NotUpdated = -1;
+
+    /// <summary>
+    /// 현재 업데이트 된 랭킹의 인덱스
+    /// </summary>
+    int updatedIndex = NotUpdated;
+
+    /// <summary>
+    /// 인풋 필드 컴포넌트
+    /// </summary>
+    TMP_InputField inputField;
+
+    private void Awake()
+    {
+        inputField = GetComponentInChildren<TMP_InputField>();  // 컴포넌트 찾고
+        inputField.onEndEdit.AddListener(OnNameInputEnd);       // 입력이 끝났을 때 실행될 함수 등록
+
+        rankLines = GetComponentsInChildren<RankLine>();        // 모든 랭킹 라인 다 가져오기
+        rankCount = rankLines.Length;           // UI 갯수에 맞게 최대 랭킹 갯수 설정
+        highScores = new int[rankCount];        // 배열 확보
+        rankerNames = new string[rankCount];
 
         LoadRankingData();              // 데이터 읽기(파일 없으면 디폴트)
+    }
+
+    private void Start()
+    {
+        inputField.gameObject.SetActive(false);     // 시작할 때 인풋 필드 안보이게 만들기
+        Player player = FindObjectOfType<Player>();
+        player.onDie += RankUpdate;         // 플레이어가 죽었을 때 랭크 업데이트 시도
+    }
+
+    /// <summary>
+    /// 이름 입력이 완료되었을 때 실행되는 함수
+    /// </summary>
+    /// <param name="text">입력받은 이름</param>
+    private void OnNameInputEnd(string text)
+    {
+        rankerNames[updatedIndex] = text;       // 입력받은 텍스트를 해당 랭커의 이름으로 지정
+        inputField.gameObject.SetActive(false); // 입력 완료되었으니 다시 안보이게 만들기
+        SaveRankingData();  // 새로 저장하고 
+        RefreshRankLines(); // UI 갱신
+    }
+
+    /// <summary>
+    /// 랭킹 업데이트 하는 함수
+    /// </summary>
+    /// <param name="player">점수를 가지고 있는 플레이어</param>
+    private void RankUpdate(Player player)
+    {
+        int newScore = player.Score;    // 새 점수
+        for(int i=0;i<rankCount; i++)   // 랭킹 1등부터 5등까지 확인
+        {
+            if(highScores[i] < newScore)    // 새 점수가 현재 랭킹보다 높으면
+            {
+                for(int j = rankCount-1; j>i;j--)           // 현재 랭킹부터 한칸씩 아래로 밀기
+                {
+                    highScores[j] = highScores[j - 1];
+                    rankerNames[j] = rankerNames[j - 1];
+                }
+                highScores[i] = newScore;   // 새 점수를 현재 랭킹에 끼워 넣기
+                rankerNames[i] = "";
+                updatedIndex = i;           // 랭킹 업데이트된 인덱스 기억
+
+                Vector3 newPos = inputField.transform.position;
+                newPos.y = rankLines[i].transform.position.y;
+                inputField.transform.position = newPos;     // 인풋 필드의 위치를 랭크라인과 같게 만들기
+                //inputField.ActivateInputField();
+                inputField.gameObject.SetActive(true);      // 인풋 필드 활성화
+                break;  // 랭킹 삽입 될 곳을 찾았으니 중지
+            }
+        }
     }
 
     void SaveRankingData()
@@ -92,6 +166,9 @@ public class RankPanel : MonoBehaviour
         return result;
     }
 
+    /// <summary>
+    /// 랭크 라인 화면 업데이트용 함수
+    /// </summary>
     void RefreshRankLines()
     {
         for (int i = 0; i < rankLines.Length; i++)

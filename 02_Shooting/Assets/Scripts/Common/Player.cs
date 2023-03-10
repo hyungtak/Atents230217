@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 죽었을 때 실행될 델리게이트
     /// </summary>
-    public Action onDie;
+    public Action<Player> onDie;
 
     /// <summary>
     /// 플레이어의 점수
@@ -393,7 +393,7 @@ public class Player : MonoBehaviour
         rigid.gravityScale = 1.0f;      // 중력 다시 적용
         rigid.freezeRotation = false;   // 회전도 풀기
 
-        onDie?.Invoke();    // 죽었다고 알리기
+        onDie?.Invoke(this);    // 죽었다고 알리기
     }
 
     // 기타 함수 --------------------------------------------------------------------------------------
