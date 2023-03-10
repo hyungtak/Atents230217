@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using UnityEngine;
 
 public class RankPanel : MonoBehaviour
@@ -18,7 +20,6 @@ public class RankPanel : MonoBehaviour
     /// 랭킹에 들어간 사람 이름(0번째가 1등, 4번째가 5등)
     /// </summary>
     string[] rankerNames = null;
-
 
     private void Awake()
     {        
@@ -45,10 +46,31 @@ public class RankPanel : MonoBehaviour
                 rankerNames[i] = $"{temp}{temp}{temp}";     // AAA,BBB,CCC,DDD,EEE
             }
         }
+
+        RefreshRankLines();
+        SaveRankingData();
     }
 
     void SaveRankingData()
     {
+        //PlayerPrefs.SetInt("Score", 10);    // 컴퓨터에 Score라는 이름으로 10을 저장
+
+        //SaveData saveData = new SaveData();
+        SaveData saveData = new();  // 윗줄과 같은 코드(타입을 알 수 있기 때문에 생략한 것)
+        saveData.rankerNames = rankerNames; // 생성한 인스턴스에 데이터 기록
+        saveData.highScores = highScores;
+
+        string json = JsonUtility.ToJson(saveData);
+        //Debug.Log(json);
+
+        string path = $"{Application.dataPath}/Save/";
+        if(!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        string fullPath = $"{path}Save.json";
+        File.WriteAllText(fullPath, json);
 
     }
 
@@ -59,9 +81,10 @@ public class RankPanel : MonoBehaviour
 
     void RefreshRankLines()
     {
-        //rankLines;
-        //highScores;
-        //rankerNames;
+        for (int i = 0; i < rankLines.Length; i++)
+        {
+            rankLines[i].SetData(rankerNames[i], highScores[i]);
+        }
     }
 
 }
