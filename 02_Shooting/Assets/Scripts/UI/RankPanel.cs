@@ -53,8 +53,6 @@ public class RankPanel : MonoBehaviour
         rankCount = rankLines.Length;           // UI 갯수에 맞게 최대 랭킹 갯수 설정
         highScores = new int[rankCount];        // 배열 확보
         rankerNames = new string[rankCount];
-
-        LoadRankingData();              // 데이터 읽기(파일 없으면 디폴트)
     }
 
     private void Start()
@@ -62,6 +60,7 @@ public class RankPanel : MonoBehaviour
         inputField.gameObject.SetActive(false);     // 시작할 때 인풋 필드 안보이게 만들기
         Player player = FindObjectOfType<Player>();
         player.onDie += RankUpdate;         // 플레이어가 죽었을 때 랭크 업데이트 시도
+        LoadRankingData();                  // 데이터 읽기(파일 없으면 디폴트)
     }
 
     /// <summary>

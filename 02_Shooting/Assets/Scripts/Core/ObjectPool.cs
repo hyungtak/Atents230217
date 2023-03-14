@@ -38,12 +38,24 @@ public class ObjectPool<T> : MonoBehaviour where T : PoolObject
     /// </summary>
     public void Initialize()
     {
-        pool = new T[poolSize];
-        readyQueue = new Queue<T>(poolSize);    // capacity를 poolSize만큼잡고 생성
-        //readyQueue.Count();     // 실제로 사용하는 갯수
-        //readyQueue.Capatity;    // 미리 만들어 놓은 노드의 갯수
+        if(pool == null)
+        { 
+            // 풀이 없으면 새로 만들고
+            pool = new T[poolSize];
+            readyQueue = new Queue<T>(poolSize);    // capacity를 poolSize만큼잡고 생성
+            //readyQueue.Count();     // 실제로 사용하는 갯수
+            //readyQueue.Capatity;    // 미리 만들어 놓은 노드의 갯수
 
-        GenerateObjects(0, poolSize, pool);     // 첫번째 풀 생성
+            GenerateObjects(0, poolSize, pool);     // 첫번째 풀 생성
+        }
+        else
+        {
+            // 있으면 풀안의 오브젝트를 모두 비활성화 시킨다.
+            foreach(var obj in pool)
+            {
+                obj.gameObject.SetActive(false);
+            }
+        }
     }
 
     /// <summary>
