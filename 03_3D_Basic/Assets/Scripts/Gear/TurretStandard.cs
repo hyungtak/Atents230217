@@ -12,8 +12,6 @@ public class TurretStandard : Turret
 
     protected override void OnFire()
     {
-        GameObject obj = Instantiate(bulletPrefab);
-        obj.transform.position = fireTransform.position;
-        obj.transform.rotation = fireTransform.rotation;
+        Factory.Inst.GetBullet(fireTransform);        
     }
 }
