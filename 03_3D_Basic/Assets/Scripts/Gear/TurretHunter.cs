@@ -11,6 +11,21 @@ public class TurretHunter : Turret
     public float sightRange = 10.0f;
 
     /// <summary>
+    /// 이 터렛의 회전 속도
+    /// </summary>
+    public float turnSpeed = 360.0f;
+
+    /// <summary>
+    /// 터렛이 발사를 시작하는 각도
+    /// </summary>
+    public float fireAngle = 10.0f;
+
+    /// <summary>
+    /// 발사 중인지 아닌지 표시하는 변수. true면 발사중, false 발사하지 않는 중
+    /// </summary>
+    bool isFiring = false;
+
+    /// <summary>
     /// 이 터렛이 추적할 대상
     /// </summary>
     Transform target = null;
@@ -93,10 +108,50 @@ public class TurretHunter : Turret
         {
             Vector3 dir = target.position - barrelBodyTransform.position;
             dir.y = 0;                          // 높낮이는 영향을 안끼치게 0으로 설정
-            barrelBodyTransform.forward = dir;  // 대상을 바라보기
 
-            //Vector3 lookAt = other.transform.position + Vector3.up * barrelBodyTransform.position.y;
-            //barrelBodyTransform.LookAt(lookAt);
+            // 터렛이 forward와 플레이어를 향하는 방향 백터의 사이각을 구함
+            float angle = Vector3.SignedAngle(barrelBodyTransform.forward, dir, barrelBodyTransform.up);
+                        
+            if( angle < 1 && angle > -1 )   
+            {
+                // 충분히 사이각이 작으면 dir로 직접 설정
+                barrelBodyTransform.rotation = Quaternion.LookRotation(dir);
+            }
+            else
+            {
+                // 어느 정도 사이각이 떨어져 있으면 등속도로 회전
+                // 정방향 회전인지 역방향 회전인지 결정
+                float rotateDir = angle > 0 ? 1.0f : -1.0f; // 삼항연산자. 성능은 차이가 없음. 코드 줄 수 줄이는 용도
+                //if( angle > 0 )           // 위 삼항연산자와 같은 내용의 코드
+                //{
+                //    rotateDir = 1.0f;
+                //}
+                //else
+                //{
+                //    rotateDir = -1.0f;
+                //}
+                barrelBodyTransform.Rotate(0, Time.deltaTime * turnSpeed * rotateDir, 0);
+            }
+
+            // 발사각 안이면 총알 발사, 밖이면 발사 정지 ( -fireAngle ~ fireAngle 사이 인지 확인)
+            if ( angle < fireAngle && angle > -fireAngle)
+            {
+                // 발사
+                if( !isFiring )
+                {
+                    StartCoroutine(fireCoroutine);  // 연사 시작
+                    isFiring = true;
+                }
+            }
+            else
+            {
+                // 발사 정지
+                if( isFiring )
+                {
+                    StopCoroutine(fireCoroutine);   // 연사 중지
+                    isFiring = false;
+                }
+            }
         }
     }
 
@@ -130,5 +185,9 @@ public class TurretHunter : Turret
         return result;
     }
 
+    protected override void OnFire()
+    {
+        Factory.Inst.GetBullet(fireTransform);
+    }
 
 }

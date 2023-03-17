@@ -5,11 +5,6 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
     /// <summary>
-    /// 발사할 총알 프리팹
-    /// </summary>
-    public GameObject bulletPrefab;
-
-    /// <summary>
     /// 총알 발사 시간 간격
     /// </summary>
     public float fireInterval;
