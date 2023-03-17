@@ -54,6 +54,37 @@ public class TurretHunter : Turret
     }
 
     /// <summary>
+    /// 씬 창에서 보이는 테스트용 정보 그리는 함수
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        if(barrelBodyTransform == null) // 에디터에서 플레이를 안했을 때 찾기 위해서 사용
+        {
+            barrelBodyTransform = transform.GetChild(2);    // 없으면 찾아 놓기
+        }
+
+        Gizmos.color = Color.yellow;                        // 기본 색 노란색으로 설정
+        Vector3 from = barrelBodyTransform.position;        // 시작 위치 설정하기        
+        Vector3 to;                                         // 도착 위치
+        
+        Ray ray = new Ray(barrelBodyTransform.position, barrelBodyTransform.forward);
+        if( Physics.Raycast(ray, out RaycastHit hitInfo, sightRange) )  // 선이 충돌하는지 체크
+        {
+            to = hitInfo.point;                             // 충돌했으면 도착지점은 충돌한 위치
+            Gizmos.color = Color.red;                       // 충돌했으면 빨간색으로 보이기
+            Gizmos.DrawSphere(to, 0.1f);                    // 충돌한 지점을 빨간원으로 강조하기
+        }
+        else
+        {
+            // to는 barrelBodyTransform.position 위치에서
+            // barrelBodyTransform.forward 방향으로 sightRange만큼 이동한 위치
+            to = barrelBodyTransform.position + barrelBodyTransform.forward * sightRange;   // 도착위치계산
+        }
+        
+        Gizmos.DrawLine(from, to);  // 최종적으로 선을 그리기
+    }
+
+    /// <summary>
     /// 타겟이 있고 테렛이 볼 수 있으면 해당 방향으로 터렛의 고개를 돌리는 함수
     /// </summary>
     private void LookTarget()
@@ -98,4 +129,6 @@ public class TurretHunter : Turret
 
         return result;
     }
+
+
 }
