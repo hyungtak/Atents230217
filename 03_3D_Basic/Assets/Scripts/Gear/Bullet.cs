@@ -18,6 +18,7 @@ public class Bullet : PoolObject
 
     private void OnEnable()    
     {
+        rigid.angularVelocity = Vector3.zero;               // 회전력은 전부 제거
         rigid.velocity = initialSpeed * transform.forward;  // 초기 운동량 결정
         StartCoroutine(LifeOver(10.0f));    // 시작하고 10초 뒤 비활성화
     }
