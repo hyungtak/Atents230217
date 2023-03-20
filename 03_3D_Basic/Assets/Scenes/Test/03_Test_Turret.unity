@@ -539,7 +539,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1216594837, guid: 5af0b088db0e05f4286e02c4522bc4af, type: 3}
       propertyPath: fireInterval
-      value: 0.1
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7949029021006686724, guid: 5af0b088db0e05f4286e02c4522bc4af, type: 3}
       propertyPath: m_RootOrder
