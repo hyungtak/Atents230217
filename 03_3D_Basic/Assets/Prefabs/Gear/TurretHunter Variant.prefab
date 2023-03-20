@@ -74,5 +74,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab82fad8808e4ea498a924dd9c95e39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 6549797197293659649, guid: f6f2e6494dc9cfd4297c2cbc03495595, type: 3}
-  fireInterval: 0
+  fireInterval: 0.1
+  sightRange: 10
+  turnSpeed: 360
+  fireAngle: 10
+--- !u!135 &1216594838
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949029021006686727}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 20
+  m_Center: {x: 0, y: 0, z: 0}
