@@ -53,12 +53,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1031722091706758126, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
       propertyPath: m_Name
-      value: HingedDoor_Auto
+      value: HingedDoor_Auto Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 1031722092596192285, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 6758a6b9726113b4897a8a7adc6bcd15, type: 2}
     - target: {fileID: 7927199164551767188, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -69,7 +65,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8087892234543473660, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
       propertyPath: m_VersionIndex
-      value: 876
+      value: 879
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
@@ -78,7 +74,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1031722091706758126, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
   m_PrefabInstance: {fileID: 939875713049979144}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1031722090991318945
+--- !u!114 &4283307778946985984
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
