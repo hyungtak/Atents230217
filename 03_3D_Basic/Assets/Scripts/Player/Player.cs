@@ -50,6 +50,10 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
 
         inputActions = new PlayerInputActions();
+
+        // 아이템 사용 알람이 울리면 실행될 함수 등록
+        ItemUseAlarm alarm = GetComponentInChildren<ItemUseAlarm>();
+        alarm.onUseableItemUsed += UseObject;
     }
 
     private void OnEnable()
@@ -98,6 +102,7 @@ public class Player : MonoBehaviour
 
     private void OnUseInput(InputAction.CallbackContext context)
     {
+        anim.SetTrigger("Use");
     }
 
     private void OnJumpInput(InputAction.CallbackContext context)
@@ -149,5 +154,14 @@ public class Player : MonoBehaviour
     private void OnGrounded()
     {
         isJumping = false;      // 점프가 끝났다고 표시
+    }
+
+    /// <summary>
+    /// 아이템 사용한다는 알람이 오면 실행되는 함수
+    /// </summary>
+    /// <param name="obj">사용할 오브젝트</param>
+    private void UseObject(IUseableObject obj)
+    {
+        obj.Used(); // 사용
     }
 }
