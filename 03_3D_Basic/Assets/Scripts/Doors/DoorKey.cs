@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DoorKey : MonoBehaviour
@@ -21,8 +22,7 @@ public class DoorKey : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        target.Open();
-        Destroy(this.gameObject);
+        OnConsume();        
     }
 
     private void OnValidate()
@@ -44,5 +44,11 @@ public class DoorKey : MonoBehaviour
             //    target = null;
             //}
         }
+    }
+
+    protected virtual void OnConsume()
+    {
+        target.Open();
+        Destroy(this.gameObject);
     }
 }
