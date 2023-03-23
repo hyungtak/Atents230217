@@ -23,6 +23,35 @@ public class Player : MonoBehaviour
     public float jumpForce = 6.0f;
 
     /// <summary>
+    /// 플레이어의 최대 수명.
+    /// </summary>
+    public float lifeTimeMax = 3.0f;
+
+    /// <summary>
+    /// 플레이어의 현재 수명. 수명이 0보다 작거나 같아지면 사망
+    /// </summary>
+    float lifeTime = 3.0f;
+
+    public float LifeTime
+    {
+        get => lifeTime;
+        private set
+        {
+            lifeTime = value;
+            onLifeTimeChange?.Invoke(lifeTime/lifeTimeMax);
+
+            if(lifeTime <= 0.0f)
+            {
+                Die();
+            }
+        }
+    }
+
+    bool isAlive = true;
+
+    public Action<float> onLifeTimeChange;
+
+    /// <summary>
     /// 현재 이동 방향. -1(뒤) ~ 1(앞)
     /// </summary>
     float moveDir = 0;
@@ -69,6 +98,10 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.canceled += OnMoveInput;
         inputActions.Player.Use.performed += OnUseInput;
         inputActions.Player.Jump.performed += OnJumpInput;
+
+        isAlive = true;
+        //lifeTime = lifeTimeMax;     // 변수 값을 변경하는 것
+        LifeTime = lifeTimeMax;     // 프로퍼티를 실행시키는 것
     }
 
     private void OnDisable()
@@ -78,6 +111,11 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.canceled -= OnMoveInput;
         inputActions.Player.Move.performed -= OnMoveInput;
         inputActions.Player.Disable();                      // Player 액션맵 비활성화
+    }
+
+    private void Update()
+    {
+        LifeTime -= Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -176,23 +214,29 @@ public class Player : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        //Debug.Log("Die");
-        anim.SetTrigger("Die");
+        if(isAlive) // 살아 있는 플레이어만 죽을 수 있음
+        {
+            //Debug.Log("Die");
+            anim.SetTrigger("Die");
 
-        // Player 액션맵 비활성화
-        inputActions.Player.Disable();
+            // Player 액션맵 비활성화
+            inputActions.Player.Disable();
 
-        // pitch와 roll 회전이 막혀있던 것을 풀기
-        rigid.constraints = RigidbodyConstraints.None;
+            // pitch와 roll 회전이 막혀있던 것을 풀기
+            rigid.constraints = RigidbodyConstraints.None;
 
-        // 머리 위치에 플레이어의 뒷방향으로 0.5만큼의 힘을 가하기
-        Transform head = transform.GetChild(0);
-        rigid.AddForceAtPosition(-transform.forward*0.5f, head.position, ForceMode.Impulse);    
-        
-        // 플레이어의 up벡터를 축으로 1만큼 회전력 더하기
-        rigid.AddTorque(transform.up * 1.0f, ForceMode.Impulse);
+            // 머리 위치에 플레이어의 뒷방향으로 0.5만큼의 힘을 가하기
+            Transform head = transform.GetChild(0);
+            rigid.AddForceAtPosition(-transform.forward * 0.5f, head.position, ForceMode.Impulse);
 
-        // 델리게이트로 알림 보내기
-        onDie?.Invoke();
+            // 플레이어의 up벡터를 축으로 1만큼 회전력 더하기
+            rigid.AddTorque(transform.up * 1.0f, ForceMode.Impulse);
+
+            // 델리게이트로 알림 보내기
+            onDie?.Invoke();
+
+            // 사망 표시
+            isAlive = false;
+        }        
     }
 }
