@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class Player : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class Player : MonoBehaviour
     PlayerInputActions inputActions;
 
     private void Awake()
-    {
+    {        
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
 

@@ -35,14 +35,14 @@ public class DoorManual : DoorBase, IUseableObject
     public void Used()
     {
         //Debug.Log("사용됨");
-        OnOpen();                       // 문 열기
+        Open();                         // 문 열기
         StartCoroutine(AutoClose());    // closeTime초 이후에 자동으로 닫히게 하기
     }
 
     IEnumerator AutoClose()
     {
         yield return closeWait; // closeTime초 만큼 대기하고
-        OnClose();              // 문 닫기
+        Close();                // 문 닫기
     }
 
     private void OnTriggerEnter(Collider other)
