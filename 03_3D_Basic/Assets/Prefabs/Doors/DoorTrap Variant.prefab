@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -9.31, y: 2.08}
+  m_AnchoredPosition: {x: 0.03, y: 3.89}
   m_SizeDelta: {x: 4, y: 1.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1944159706
@@ -225,7 +225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1031722091706758126, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
       propertyPath: m_Name
-      value: DoorTrap
+      value: DoorTrap Variant
       objectReference: {fileID: 0}
     - target: {fileID: 1031722092596192285, guid: d5185ed784c89c648bb9b14a68bcd49c, type: 3}
       propertyPath: m_Materials.Array.data[0]

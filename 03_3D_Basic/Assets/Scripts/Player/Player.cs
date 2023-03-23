@@ -165,4 +165,14 @@ public class Player : MonoBehaviour
     {
         obj.Used(); // 사용
     }
+
+    public void Die()
+    {
+        //Debug.Log("Die");
+        anim.SetTrigger("Die");
+
+        // 입력 막고
+        // 뒤로 넘어지게 만들기
+        // 델리게이트로 알림 보내기
+    }
 }
