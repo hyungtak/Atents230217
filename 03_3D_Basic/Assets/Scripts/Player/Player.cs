@@ -37,6 +37,11 @@ public class Player : MonoBehaviour
     /// </summary>
     bool isJumping = false;
 
+    /// <summary>
+    /// 플레이어가 사망했음을 알리는 델리게이트
+    /// </summary>
+    public Action onDie;
+
     Rigidbody rigid;    // 리지드바디 컴포넌트
     Animator anim;      // 애니메이터 컴포넌트
 
@@ -166,13 +171,28 @@ public class Player : MonoBehaviour
         obj.Used(); // 사용
     }
 
+    /// <summary>
+    /// 플레이어가 사망했을 때 실행이 되는 함수
+    /// </summary>
     public void Die()
     {
         //Debug.Log("Die");
         anim.SetTrigger("Die");
 
-        // 입력 막고
-        // 뒤로 넘어지게 만들기
+        // Player 액션맵 비활성화
+        inputActions.Player.Disable();
+
+        // pitch와 roll 회전이 막혀있던 것을 풀기
+        rigid.constraints = RigidbodyConstraints.None;
+
+        // 머리 위치에 플레이어의 뒷방향으로 0.5만큼의 힘을 가하기
+        Transform head = transform.GetChild(0);
+        rigid.AddForceAtPosition(-transform.forward*0.5f, head.position, ForceMode.Impulse);    
+        
+        // 플레이어의 up벡터를 축으로 1만큼 회전력 더하기
+        rigid.AddTorque(transform.up * 1.0f, ForceMode.Impulse);
+
         // 델리게이트로 알림 보내기
+        onDie?.Invoke();
     }
 }
