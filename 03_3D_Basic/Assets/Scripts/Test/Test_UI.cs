@@ -7,7 +7,7 @@ public class Test_UI : MonoBehaviour
 {
     private void Start()
     {
-        RectTransform rect;
+        //RectTransform rect;
 
         //Button button= GetComponent<Button>();
         //button.onClick.AddListener(Test);
