@@ -13,6 +13,11 @@ public class Player : MonoBehaviour
     public float moveSpeed = 5.0f;
 
     /// <summary>
+    /// 현재 이동 속도
+    /// </summary>
+    private float currentMoveSpeed = 5.0f;
+
+    /// <summary>
     /// 회전 속도
     /// </summary>
     public float rotateSpeed = 180.0f;
@@ -80,6 +85,11 @@ public class Player : MonoBehaviour
     /// </summary>
     public Action onDie;
 
+    /// <summary>
+    /// rigid 읽기 전용 프로퍼티
+    /// </summary>
+    public Rigidbody Rigid => rigid;
+
     Rigidbody rigid;    // 리지드바디 컴포넌트
     Animator anim;      // 애니메이터 컴포넌트
 
@@ -111,6 +121,8 @@ public class Player : MonoBehaviour
         isAlive = true;
         //lifeTime = lifeTimeMax;     // 변수 값을 변경하는 것
         LifeTime = lifeTimeMax;     // 프로퍼티를 실행시키는 것
+
+        ResetMoveSpeed();           // 처음 속도 지정
     }
 
     private void OnDisable()
@@ -169,7 +181,7 @@ public class Player : MonoBehaviour
     void Move()
     {
         // moveDir 방향으로 이동 시키기(앞 아니면 뒤)
-        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * moveSpeed * moveDir * transform.forward);
+        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * currentMoveSpeed * moveDir * transform.forward);
     }
 
     /// <summary>
@@ -247,5 +259,29 @@ public class Player : MonoBehaviour
             // 사망 표시
             isAlive = false;
         }        
+    }
+
+    /// <summary>
+    /// 점프 중이라고 강제로 설정하는 함수
+    /// </summary>
+    public void SetForceJumpMode()
+    {
+        isJumping = true;
+    }
+
+    /// <summary>
+    /// 속도를 절반으로 줄이는 함수
+    /// </summary>
+    public void SetHalfSpeed()
+    {
+        currentMoveSpeed = moveSpeed * 0.5f;
+    }
+
+    /// <summary>
+    /// 속도를 원래 속도로 되돌리는 함수
+    /// </summary>
+    public void ResetMoveSpeed()
+    {
+        currentMoveSpeed = moveSpeed;
     }
 }
