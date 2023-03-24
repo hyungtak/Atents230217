@@ -32,23 +32,32 @@ public class Player : MonoBehaviour
     /// </summary>
     float lifeTime = 3.0f;
 
+    /// <summary>
+    /// 수명용 프로퍼티. 쓰기는 private
+    /// </summary>
     public float LifeTime
     {
         get => lifeTime;
         private set
         {
-            lifeTime = value;
-            onLifeTimeChange?.Invoke(lifeTime/lifeTimeMax);
+            lifeTime = value;       // 수명 변경
+            onLifeTimeChange?.Invoke(lifeTime/lifeTimeMax); // 수명 변경을 알림. (비율을 알려줌)
 
-            if(lifeTime <= 0.0f)
+            if(lifeTime <= 0.0f)    // 수명이 다되면 사망
             {
                 Die();
             }
         }
     }
 
+    /// <summary>
+    /// 생존 여부 표시
+    /// </summary>
     bool isAlive = true;
 
+    /// <summary>
+    /// 수명 변경을 알리기 위한 델리게이트(수명 남은 비율을 알려줌)
+    /// </summary>
     public Action<float> onLifeTimeChange;
 
     /// <summary>
