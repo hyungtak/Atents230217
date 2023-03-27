@@ -242,7 +242,10 @@ public class Player : MonoBehaviour
     /// <param name="obj">사용할 오브젝트</param>
     private void UseObject(IUseableObject obj)
     {
-        obj.Used(); // 사용
+        if (obj.IsDirectUse)
+        {
+            obj.Used(); // 사용
+        }
     }
 
     /// <summary>
