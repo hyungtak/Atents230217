@@ -54,6 +54,7 @@ public class WaypointUser : MonoBehaviour
             // 도착
             SetTarget(targetWaypoints.GetNextWaypoint());   // 도착했으면 다음 웨이포인트 지점 가져와서 설정하기
             moveDelta = Vector3.zero;
+            OnArrived();
         }
         onMove?.Invoke(moveDelta);
     }
@@ -66,5 +67,9 @@ public class WaypointUser : MonoBehaviour
     {
         this.target = target;               // 목적지 설정하고        
         moveDir = (this.target.position - transform.position).normalized;   // 이동 방향 기록해 놓기
+    }
+
+    protected virtual void OnArrived()
+    {
     }
 }
