@@ -22,7 +22,11 @@ public class Blade : WaypointUser
     private void Update()
     {
         bladeMesh.Rotate(Time.deltaTime * spinSpeed * Vector3.right);   // 톱날 회전
-        Move();
+    }
+
+    private void FixedUpdate()
+    {
+        Move();        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -33,5 +37,11 @@ public class Blade : WaypointUser
         {
             player.Die();   // 컴포넌트 가져와서 죽이기
         }
+    }
+
+    protected override void SetTarget(Transform target)
+    {
+        base.SetTarget(target);        
+        transform.LookAt(target);     // 목적지 바라보기
     }
 }

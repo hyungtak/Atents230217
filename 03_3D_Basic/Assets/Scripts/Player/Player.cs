@@ -151,6 +151,21 @@ public class Player : MonoBehaviour
         {
             OnGrounded();   // 착지 함수 실행
         }
+        else if(collision.gameObject.CompareTag("Platform"))
+        {
+            Platform platform = collision.gameObject.GetComponent<Platform>();
+            platform.onMove += OnRideMovingObject;
+            OnGrounded();   // 바닥에 도착한 처리도 추가로 해주기
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            Platform platform = collision.gameObject.GetComponent<Platform>();
+            platform.onMove -= OnRideMovingObject;
+        }
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
@@ -283,5 +298,10 @@ public class Player : MonoBehaviour
     public void ResetMoveSpeed()
     {
         currentMoveSpeed = moveSpeed;
+    }
+
+    private void OnRideMovingObject(Vector3 delta)
+    {
+        rigid.MovePosition(rigid.position + delta);
     }
 }
