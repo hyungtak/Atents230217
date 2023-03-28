@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
 
 public class Player : MonoBehaviour
 {
@@ -81,6 +80,44 @@ public class Player : MonoBehaviour
     bool isJumping = false;
 
     /// <summary>
+    /// 현재 남아있는 점프 쿨 타임
+    /// </summary>
+    float jumpCoolTime = 5.0f;
+    
+    /// <summary>
+    /// 점프 쿨 타임
+    /// </summary>
+    public float jumpCoolTimeMax = 5.0f;
+
+    /// <summary>
+    /// 쿨 타임 변경 될 때마다 신호를 보내기 위한 프로퍼티
+    /// </summary>
+    private float JumpCoolTime
+    {
+        get => jumpCoolTime;
+        set
+        {
+            jumpCoolTime = value;
+            if(jumpCoolTime < 0)
+            {
+                jumpCoolTime = 0;
+            }
+            onJumpCoolTimeChange?.Invoke(jumpCoolTime / jumpCoolTimeMax);   // 쿨타임이 변경되면 비율을 알려줌
+        }
+    }
+
+    /// <summary>
+    /// 쿨타임 변경될 때 실행될 델리게이트
+    /// </summary>
+    Action<float> onJumpCoolTimeChange;
+
+    /// <summary>
+    /// true면 점프 쿨 완료, false 점프 쿨타임 중
+    /// </summary>
+    private bool IsJumpCoolEnd => jumpCoolTime <= 0;
+        
+
+    /// <summary>
     /// 플레이어가 사망했음을 알리는 델리게이트
     /// </summary>
     public Action onDie;
@@ -121,6 +158,7 @@ public class Player : MonoBehaviour
         isAlive = true;
         //lifeTime = lifeTimeMax;     // 변수 값을 변경하는 것
         LifeTime = lifeTimeMax;     // 프로퍼티를 실행시키는 것
+        JumpCoolTime = 0.0f;        // 점프 쿨타임 초기화(시작하자마자 사용 가능)
 
         ResetMoveSpeed();           // 처음 속도 지정
     }
@@ -134,9 +172,22 @@ public class Player : MonoBehaviour
         inputActions.Player.Disable();                      // Player 액션맵 비활성화
     }
 
+    private void Start()
+    {
+        // 가상 스틱 연결
+        VirtualStick stick = FindObjectOfType<VirtualStick>();
+        stick.onMoveInput += (input) => SetInput(input, input != Vector2.zero); // 가상 스틱의 입력이 있으면 이동 처리
+
+        // 가상 버튼 연결
+        VirtualButton button = FindObjectOfType<VirtualButton>();
+        button.onClick += Jump;                             // 가상 버튼이 눌려지면 점프
+        onJumpCoolTimeChange += button.RefreshCoolTime;     // 점프 쿨타임이 변하면 버튼의 쿨타임 표시 변경
+    }
+
     private void Update()
     {
         LifeTime -= Time.deltaTime;
+        JumpCoolTime -= Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -178,13 +229,22 @@ public class Player : MonoBehaviour
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();   // 현재 키보드 입력 상황 받기
+        // context.performed : 액션에 연결된 키 중 하나라도 입력 중이면 true, 아니면 false
+        // context.canceled : 액션에 연결된 키가 모두 입력 중이지 않으면 true, 아니면 false
+        SetInput(input, !context.canceled);
+    }
+
+    /// <summary>
+    /// 입력에 따라 이동 처리용 변수에 값을 설정하는 함수
+    /// </summary>
+    /// <param name="input">이동 방향</param>
+    /// <param name="isMove">이동 중인지 아닌지(true면 이동중, false면 정지 중)</param>
+    private void SetInput(Vector2 input, bool isMove)
+    {
         rotateDir = input.x;    // 좌우(좌:-1, 우:+1)
         moveDir = input.y;      // 앞뒤(앞:+1, 뒤:-1)
 
-        // context.performed : 액션에 연결된 키 중 하나라도 입력 중이면 true, 아니면 false
-        // context.canceled : 액션에 연결된 키가 모두 입력 중이지 않으면 true, 아니면 false
-
-        anim.SetBool("IsMove", !context.canceled);      // 애니메이션 파라메터 변경(Idle, Move중 선택)
+        anim.SetBool("IsMove", isMove);      // 애니메이션 파라메터 변경(Idle, Move중 선택)
     }
 
     private void OnUseInput(InputAction.CallbackContext context)
@@ -228,8 +288,9 @@ public class Player : MonoBehaviour
     /// </summary>
     void Jump()
     {
-        if (!isJumping)         // 점프 중이 아닐때만
+        if (!isJumping && IsJumpCoolEnd)    // 점프 중이 아니고 쿨타임이 다 되었을 때만 가능
         {
+            JumpCoolTime = jumpCoolTimeMax; // 쿨타임 초기화
             rigid.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);  // 월드의 Up방향으로 힘을 즉시 가하기
             isJumping = true;   // 점프중이라고 표시
         }

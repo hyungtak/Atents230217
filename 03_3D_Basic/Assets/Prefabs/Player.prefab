@@ -165,6 +165,7 @@ MonoBehaviour:
   moveSpeed: 5
   rotateSpeed: 180
   jumpForce: 5
+  lifeTimeMax: 100000
 --- !u!1 &1921429237492225521
 GameObject:
   m_ObjectHideFlags: 0
