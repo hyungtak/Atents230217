@@ -153,17 +153,24 @@ public class Player : MonoBehaviour
         }
         else if(collision.gameObject.CompareTag("Platform"))
         {
-            Platform platform = collision.gameObject.GetComponent<Platform>();
-            platform.onMove += OnRideMovingObject;
             OnGrounded();   // 바닥에 도착한 처리도 추가로 해주기
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Platform"))
+        if (other.CompareTag("Platform"))
         {
-            Platform platform = collision.gameObject.GetComponent<Platform>();
+            Platform platform = other.GetComponent<Platform>();
+            platform.onMove += OnRideMovingObject;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Platform"))
+        {
+            Platform platform = other.GetComponent<Platform>();
             platform.onMove -= OnRideMovingObject;
         }
     }
