@@ -176,12 +176,18 @@ public class Player : MonoBehaviour
     {
         // 가상 스틱 연결
         VirtualStick stick = FindObjectOfType<VirtualStick>();
-        stick.onMoveInput += (input) => SetInput(input, input != Vector2.zero); // 가상 스틱의 입력이 있으면 이동 처리
+        if(stick != null)
+        {
+            stick.onMoveInput += (input) => SetInput(input, input != Vector2.zero); // 가상 스틱의 입력이 있으면 이동 처리
+        }
 
         // 가상 버튼 연결
         VirtualButton button = FindObjectOfType<VirtualButton>();
-        button.onClick += Jump;                             // 가상 버튼이 눌려지면 점프
-        onJumpCoolTimeChange += button.RefreshCoolTime;     // 점프 쿨타임이 변하면 버튼의 쿨타임 표시 변경
+        if(button != null)
+        {
+            button.onClick += Jump;                             // 가상 버튼이 눌려지면 점프
+            onJumpCoolTimeChange += button.RefreshCoolTime;     // 점프 쿨타임이 변하면 버튼의 쿨타임 표시 변경
+        }
     }
 
     private void Update()
