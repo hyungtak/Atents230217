@@ -101,15 +101,21 @@ public class RoadTile : Tile
             case AdjTilePosition.North | AdjTilePosition.South:
                 index = 0;      // l자 모양의 스프라이트
                 break;
-            //case :
-            //    index = 1;      // ㄱ자 모양의 스프라이트
-            //    break;
-            //case :
-            //    index = 2;      // ㅗ자 모양의 스프라이트
-            //    break;
-            //case :
-            //    index = 3;      // +자 모양의 스프라이트
-            //    break;
+            case AdjTilePosition.South | AdjTilePosition.West:
+            case AdjTilePosition.West | AdjTilePosition.North:
+            case AdjTilePosition.North | AdjTilePosition.East:
+            case AdjTilePosition.East | AdjTilePosition.South:
+                index = 1;      // ㄱ자 모양의 스프라이트
+                break;
+            case AdjTilePosition.All & ~AdjTilePosition.North:  // 0000 1111 & ~0000 0001 = 0000 1111 & 1111 1110 = 0000 1110
+            case AdjTilePosition.All & ~AdjTilePosition.East:
+            case AdjTilePosition.All & ~AdjTilePosition.South:
+            case AdjTilePosition.All & ~AdjTilePosition.West:
+                index = 2;      // ㅗ자 모양의 스프라이트
+                break;
+            case AdjTilePosition.All:
+                index = 3;      // +자 모양의 스프라이트
+                break;
         }
 
         return index;
@@ -117,7 +123,29 @@ public class RoadTile : Tile
 
     private Quaternion GetRotation(AdjTilePosition mask)
     {
-        return Quaternion.identity;
+        Quaternion rotate = Quaternion.identity;
+
+        // 기본 : l, ㄱ, ㅗ
+        switch(mask)
+        {
+            case AdjTilePosition.East:                          // l자
+            case AdjTilePosition.West:
+            case AdjTilePosition.East | AdjTilePosition.West:
+            case AdjTilePosition.West | AdjTilePosition.North:  // ㄱ자
+            case AdjTilePosition.All & ~AdjTilePosition.West:   // ㅗ자
+                rotate = Quaternion.Euler(0, 0, -90);
+                break;
+            case AdjTilePosition.North | AdjTilePosition.East:  // ㄱ자
+            case AdjTilePosition.All & ~AdjTilePosition.North:  // ㅗ자
+                rotate = Quaternion.Euler(0, 0, -180);
+                break;
+            case AdjTilePosition.East | AdjTilePosition.South:  // ㄱ자
+            case AdjTilePosition.All & ~AdjTilePosition.East:   // ㅗ자
+                rotate = Quaternion.Euler(0, 0, -270);
+                break;
+        }
+
+        return rotate;
     }
 
     /// <summary>
