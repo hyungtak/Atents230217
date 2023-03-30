@@ -50,3 +50,6 @@ TagManager:
   - name: Water
     uniqueID: 285689261
     locked: 0
+  - name: Object
+    uniqueID: 3302585683
+    locked: 0
