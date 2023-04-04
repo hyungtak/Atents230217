@@ -129,8 +129,7 @@ public class Player : MonoBehaviour
             inputDir = oldInputDir;                 // 입력 방향 복원
             anim.SetFloat("InputX", inputDir.x);    // 애니메이션 파라메터 설정
             anim.SetFloat("InputY", inputDir.y);
-
-            isAttacking = false;
         }
+        isAttacking = false;    // 이동 중이든 아니든 무조건 false로 초기화
     }
 }
