@@ -27,6 +27,11 @@ public class Player : MonoBehaviour
     bool isMove = false;
 
     /// <summary>
+    /// 현재 공격 중인지 표시
+    /// </summary>
+    bool isAttacking = false;
+
+    /// <summary>
     /// 공격 쿨타임
     /// </summary>
     public float attackCoolTime = 1.0f;
@@ -79,11 +84,18 @@ public class Player : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        inputDir = context.ReadValue<Vector2>();    // 입력 방향 저장
-        isMove = true;                              // 이동 중이라고 표시
+        if (isAttacking)
+        {
+            oldInputDir = context.ReadValue<Vector2>(); // 공격 중일 때는 백업해 놓은 값만 변경
+        }
+        else
+        {
+            inputDir = context.ReadValue<Vector2>();    // 입력 방향 저장            
+            anim.SetFloat("InputX", inputDir.x);        // 애니메이션 파라메터 설정
+            anim.SetFloat("InputY", inputDir.y);
+        }
 
-        anim.SetFloat("InputX", inputDir.x);        // 애니메이션 파라메터 설정
-        anim.SetFloat("InputY", inputDir.y);
+        isMove = true;                              // 이동 중이라고 표시
         anim.SetBool("IsMove", isMove);
     }
 
@@ -99,6 +111,7 @@ public class Player : MonoBehaviour
     {
         if( currentAttackCoolTime < 0 )             // 쿨타임이 0미만일 때만 가능
         {
+            isAttacking = true;
             oldInputDir = inputDir;                 // 입력 방향 백업
             inputDir = Vector2.zero;                // 입력 방향 초기화(안움직이게 만드는 목적)
             anim.SetTrigger("Attack");              // 공격 애니메이션 재생
@@ -113,7 +126,11 @@ public class Player : MonoBehaviour
     {
         if( isMove )                    // 아직 이동 중일 때만
         {
-            inputDir = oldInputDir;     // 입력 방향 복원
+            inputDir = oldInputDir;                 // 입력 방향 복원
+            anim.SetFloat("InputX", inputDir.x);    // 애니메이션 파라메터 설정
+            anim.SetFloat("InputY", inputDir.y);
+
+            isAttacking = false;
         }
     }
 }
