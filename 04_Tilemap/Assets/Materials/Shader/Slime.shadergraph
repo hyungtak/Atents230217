@@ -36,6 +36,15 @@
     "m_CategoryData": [
         {
             "m_Id": "e7c0c7df70f347eca4164ad32c7582df"
+        },
+        {
+            "m_Id": "4037e94fe615430f91427cf595701f03"
+        },
+        {
+            "m_Id": "3c162b5e35394604862cb60dda5693a1"
+        },
+        {
+            "m_Id": "403b3c92ebeb4bb9a66b037f240bd2d8"
         }
     ],
     "m_Nodes": [
@@ -2839,6 +2848,24 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "3c162b5e35394604862cb60dda5693a1",
+    "m_Name": "Phase",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "526dd108cfdb4bb9ad73b38190533bc2"
+        },
+        {
+            "m_Id": "a8400cce8df945a6b0d3749afbc5e988"
+        },
+        {
+            "m_Id": "cf4199c1ebe14ddc84cc3870cf13d132"
+        }
+    ]
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty",
     "m_ObjectId": "3c48bdedeec14a78a63bbc9288d79904",
     "m_Guid": {
@@ -3040,6 +3067,39 @@
     "m_Property": {
         "m_Id": "8fbece595d464f0a9cb7204451d43f46"
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "4037e94fe615430f91427cf595701f03",
+    "m_Name": "Outline",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "d1f74c2728a84f3bb1c51f0452f7bdaa"
+        },
+        {
+            "m_Id": "8fbece595d464f0a9cb7204451d43f46"
+        }
+    ]
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "403b3c92ebeb4bb9a66b037f240bd2d8",
+    "m_Name": "Dissolve",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "1fc5b9dbbdb946a58107821984bd7106"
+        },
+        {
+            "m_Id": "d9717daaf3e847a298624b6abf749e06"
+        },
+        {
+            "m_Id": "8cef090785ff487a857f64df21ccc572"
+        }
+    ]
 }
 
 {
@@ -8090,30 +8150,6 @@
     "m_ChildObjectList": [
         {
             "m_Id": "3c48bdedeec14a78a63bbc9288d79904"
-        },
-        {
-            "m_Id": "d1f74c2728a84f3bb1c51f0452f7bdaa"
-        },
-        {
-            "m_Id": "8fbece595d464f0a9cb7204451d43f46"
-        },
-        {
-            "m_Id": "526dd108cfdb4bb9ad73b38190533bc2"
-        },
-        {
-            "m_Id": "a8400cce8df945a6b0d3749afbc5e988"
-        },
-        {
-            "m_Id": "cf4199c1ebe14ddc84cc3870cf13d132"
-        },
-        {
-            "m_Id": "1fc5b9dbbdb946a58107821984bd7106"
-        },
-        {
-            "m_Id": "d9717daaf3e847a298624b6abf749e06"
-        },
-        {
-            "m_Id": "8cef090785ff487a857f64df21ccc572"
         }
     ]
 }
