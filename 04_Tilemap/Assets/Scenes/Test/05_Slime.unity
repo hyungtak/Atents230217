@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 517124348}
   - component: {fileID: 517124347}
   m_Layer: 0
-  m_Name: Slime_Dissolve
+  m_Name: Slime_Dissolve_Bad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -732,7 +732,7 @@ GameObject:
   - component: {fileID: 1720315351}
   - component: {fileID: 1720315352}
   m_Layer: 0
-  m_Name: Slime_Dissolve2
+  m_Name: Slime_Dissolve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -854,6 +854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 861e45c2f36115e4bb5e96d7137fa210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 2
   spriteRenderers:
   - {fileID: 1566278200}
   - {fileID: 1182414581}
@@ -933,7 +934,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 748e7b62e81a7554084c6f919daf70c7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

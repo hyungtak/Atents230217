@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 
 public class Test_Shader : Test_Base
 {
+    public float speed = 0.5f;
+    float acc = 0.0f;   // 누적시간
+
     // 0번 : outline
     // 1,2번 : phase
     // 3,4번 : dissolve
@@ -34,10 +37,20 @@ public class Test_Shader : Test_Base
 
     private void Update()
     {
+        // 실습1
         // 숫자를 0~1사이로 계속 왕복하게 만들기
         // phase와 dissolve가 계속 핑퐁되도록 만들기
-
+        acc += Time.deltaTime;
+        float num = (Mathf.Cos(acc * speed) + 1.0f) * 0.5f;
+        //Debug.Log(num);
         // 1,2번 : phase
+        materials[1].SetFloat("_Split", num);
+        materials[2].SetFloat("_Split", num);
         // 3,4번 : dissolve
+        materials[3].SetFloat("_Fade", num);
+        materials[4].SetFloat("_Fade", num);
+
+        // 실습2
+        // Outline, phase, dissolve를 하나의 셰이더 파일에서 처리하기
     }
 }
