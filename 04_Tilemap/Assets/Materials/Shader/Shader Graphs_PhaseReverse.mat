@@ -41,5 +41,5 @@ Material:
     - _Split: 0.581
     - _Thickness: 0.1
     m_Colors:
-    - _Color: {r: 4, g: 0, b: 0, a: 0}
+    - _Color: {r: 0, g: 2.307472, b: 3.9999995, a: 0}
   m_BuildTextureStacks: []
