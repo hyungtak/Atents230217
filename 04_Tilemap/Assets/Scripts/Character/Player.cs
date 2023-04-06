@@ -29,14 +29,19 @@ public class Player : MonoBehaviour
 
     // 공격 관련 -----------------------------------------------------------------------------------
     /// <summary>
+    /// 공격 쿨타임
+    /// </summary>
+    public float attackCoolTime = 1.0f;
+
+    /// <summary>
     /// 현재 공격 중인지 표시
     /// </summary>
     bool isAttacking = false;
 
     /// <summary>
-    /// 공격 쿨타임
+    /// 공격이 유효한 애니메이션 상태인지 표시하는 변수
     /// </summary>
-    public float attackCoolTime = 1.0f;
+    bool isAttackValid = false;
 
     /// <summary>
     /// 현재 남아있는 공격 쿨타임
@@ -47,6 +52,11 @@ public class Player : MonoBehaviour
     /// 공격 영역의 중심축
     /// </summary>
     Transform attackAreaCenter;
+
+    /// <summary>
+    /// 플레이어의 공격 범위 안에 들어와 있는 모든 슬라임
+    /// </summary>
+    List<Slime> attackTargetList;
 
     // 기타 ---------------------------------------------------------------------------------------
     // 컴포넌트들
@@ -63,6 +73,30 @@ public class Player : MonoBehaviour
         inputActions = new PlayerInputActions();
 
         attackAreaCenter = transform.GetChild(0);
+
+        attackTargetList = new List<Slime>(4);
+        EnemySensor sensor = attackAreaCenter.GetComponentInChildren<EnemySensor>();    // 센서 찾고
+        sensor.onEnemyEnter += (slime) =>
+        {
+            // 센서 안에 슬라임이 들어오면 
+            if(isAttackValid)
+            {
+                // 공격이 유효한 상태면 바로 죽이기
+                slime.OnAttacked();
+            }
+            else
+            {
+                // 공격이 아직 유효하지 않으면 리스트에 담아 놓기
+                attackTargetList.Add(slime);    // 리스트에 추가하고
+                slime.ShowOutline(true);        // 아웃라인 표시
+            }
+        };
+        sensor.onEnemyExit += (slime) =>
+        { 
+            // 센서에서 슬라임이 나가면
+            attackTargetList.Remove(slime); // 리스트에서 제거하고
+            slime.ShowOutline(false);       // 아웃라인 끄기
+        };
     }
 
     private void OnEnable()
@@ -131,6 +165,31 @@ public class Player : MonoBehaviour
             anim.SetTrigger("Attack");              // 공격 애니메이션 재생
             currentAttackCoolTime = attackCoolTime; // 쿨타임 초기화
         }
+    }
+
+    /// <summary>
+    /// 공격이 효과가 있을 때 실행
+    /// 애니메이션 이벤트로 실행할 함수.
+    /// </summary>
+    public void AttackValid()
+    {
+        isAttackValid = true;
+
+        while(attackTargetList.Count > 0)       // 리스트에 슬라임이 남아있으면 계속 반복
+        {
+            Slime slime = attackTargetList[0];  // 하나를 꺼내서
+            attackTargetList.RemoveAt(0);
+            slime.OnAttacked();                 // 공격하기
+        }
+    }
+
+    /// <summary>
+    /// 공격 효과가 없어졌을 때 실행
+    /// 애니메이션 이벤트로 실행할 함수.
+    /// </summary>
+    public void AttackNotValid()
+    {
+        isAttackValid = false;
     }
 
     /// <summary>
