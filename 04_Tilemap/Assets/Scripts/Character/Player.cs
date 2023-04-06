@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    // 이동 관련 -----------------------------------------------------------------------------------
     /// <summary>
     /// 플레이어의 이동 속도
     /// </summary>
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     /// </summary>
     bool isMove = false;
 
+    // 공격 관련 -----------------------------------------------------------------------------------
     /// <summary>
     /// 현재 공격 중인지 표시
     /// </summary>
@@ -41,6 +43,12 @@ public class Player : MonoBehaviour
     /// </summary>
     float currentAttackCoolTime = 0.0f;
 
+    /// <summary>
+    /// 공격 영역의 중심축
+    /// </summary>
+    Transform attackAreaCenter;
+
+    // 기타 ---------------------------------------------------------------------------------------
     // 컴포넌트들
     Animator anim;
     Rigidbody2D rigid;
@@ -53,6 +61,8 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
         inputActions = new PlayerInputActions();
+
+        attackAreaCenter = transform.GetChild(0);
     }
 
     private void OnEnable()
@@ -84,19 +94,23 @@ public class Player : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
+        Vector2 input = context.ReadValue<Vector2>();
+
         if (isAttacking)
         {
-            oldInputDir = context.ReadValue<Vector2>(); // 공격 중일 때는 백업해 놓은 값만 변경
+            oldInputDir = input; // 공격 중일 때는 백업해 놓은 값만 변경
         }
         else
         {
-            inputDir = context.ReadValue<Vector2>();    // 입력 방향 저장            
+            inputDir = input;    // 입력 방향 저장            
             anim.SetFloat("InputX", inputDir.x);        // 애니메이션 파라메터 설정
             anim.SetFloat("InputY", inputDir.y);
+
+            AttackAreaRotate(inputDir);                 // 입력 방향에 따라 회전
         }
 
         isMove = true;                              // 이동 중이라고 표시
-        anim.SetBool("IsMove", isMove);
+        anim.SetBool("IsMove", isMove);        
     }
 
     private void OnStop(InputAction.CallbackContext context)
@@ -129,7 +143,38 @@ public class Player : MonoBehaviour
             inputDir = oldInputDir;                 // 입력 방향 복원
             anim.SetFloat("InputX", inputDir.x);    // 애니메이션 파라메터 설정
             anim.SetFloat("InputY", inputDir.y);
+
+            AttackAreaRotate(inputDir);             // 공격 영역 회전 시키기
         }
         isAttacking = false;    // 이동 중이든 아니든 무조건 false로 초기화
+    }
+
+    /// <summary>
+    /// 공격 영역 회전 시키는 함수
+    /// </summary>
+    /// <param name="input">입력된 방향</param>
+    private void AttackAreaRotate(Vector2 input)
+    {
+        // 공격 영역 중심축 회전하기
+        if (input.y < 0)            // 아래로 이동
+        {
+            attackAreaCenter.rotation = Quaternion.identity;
+        }
+        else if (input.y > 0)       // 위로 이동
+        {
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, 180.0f);
+        }
+        else if (input.x > 0)       // 오른쪽으로 이동
+        {
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, 90.0f);  // 반시계방향으로 90도
+        }
+        else if (input.x < 0)       //왼쪽으로 이동
+        {
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, -90.0f); // 시계방향으로 90도
+        }
+        else
+        {
+            attackAreaCenter.rotation = Quaternion.identity;    // 중립
+        }
     }
 }
