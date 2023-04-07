@@ -55,7 +55,7 @@ public class GridMap
     /// <param name="x">x좌표</param>
     /// <param name="y">y좌표</param>
     /// <returns>x,y에 있는 노드. 좌표가 잘못되었을 경우 null</returns>
-    public Node GetGrid(int x, int y)
+    public Node GetNode(int x, int y)
     {
         int index = GridToIndex(x, y);
         Node result = null;
@@ -71,9 +71,9 @@ public class GridMap
     /// </summary>
     /// <param name="gridPos">그리드 좌표</param>
     /// <returns>x,y에 있는 노드. 좌표가 잘못되었을 경우 null</returns>
-    public Node GetGrid(Vector2Int gridPos)
+    public Node GetNode(Vector2Int gridPos)
     {
-        return GetGrid(gridPos.x, gridPos.y);
+        return GetNode(gridPos.x, gridPos.y);
     }
 
     /// <summary>
@@ -81,9 +81,9 @@ public class GridMap
     /// </summary>
     /// <param name="worldPos">월드 좌표</param>
     /// <returns>월드좌표에 있는 노드. 좌표가 잘못되었을 경우 null</returns>
-    public Node GetGrid(Vector3 worldPos)
+    public Node GetNode(Vector3 worldPos)
     { 
-        return GetGrid(WorldToGrid(worldPos)); 
+        return GetNode(WorldToGrid(worldPos)); 
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public class GridMap
     /// <returns>벽이면 true, 아니면 false</returns>
     public bool IsWall(int x, int y)
     {
-        Node node = GetGrid(x, y);
+        Node node = GetNode(x, y);
         return node != null && node.gridType == Node.GridType.Wall;
     }
 
@@ -194,7 +194,7 @@ public class GridMap
     /// <returns>몬스터면 true, 아니면 false</returns>
     public bool IsMonster(int x, int y)
     {
-        Node node = GetGrid(x, y);
+        Node node = GetNode(x, y);
         return node != null && node.gridType == Node.GridType.Monster;
     }
 
