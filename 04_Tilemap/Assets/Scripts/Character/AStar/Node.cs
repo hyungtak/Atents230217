@@ -54,6 +54,31 @@ public class Node : IComparable<Node>   // Node 클래스로 비교가 가능하
     public GridType gridType = GridType.Plain;
 
     /// <summary>
+    /// Node 생성자
+    /// </summary>
+    /// <param name="x">x좌표</param>
+    /// <param name="y">y좌표</param>
+    /// <param name="gridType">노드의 지형 타입. 기본 값은 평지</param>
+    public Node(int x, int y, GridType gridType = GridType.Plain)
+    {
+        this.x = x;
+        this.y = y;
+        this.gridType = gridType;
+
+        ClearData();
+    }
+
+    /// <summary>
+    /// A* 경로 계산용 데이터 초기화.
+    /// </summary>
+    public void ClearData()
+    {
+        G = float.MaxValue;
+        H = float.MaxValue;
+        parent = null;
+    }
+
+    /// <summary>
     /// 크기 비교를 하기 위해서 추가된 함수
     /// IComparable를 상속받았기 때문에 반드시 구현해야 한다.
     /// </summary>

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 그리드 좌표(0,0) = 월드 좌표(0.5f, 0.5f, 0);
+// 그리드 좌표의 한칸의 간격은 1
+
 public class GridMap
 {
     /// <summary>
@@ -20,6 +23,33 @@ public class GridMap
     int height;
 
     /// <summary>
+    /// 위치 입력이 잘못되었다는 것을 표시하기 위한 상수
+    /// </summary>
+    public const int Error_Not_Valid_Position = -1;
+
+    public GridMap(int width, int height)
+    {
+        // world의 (0,0,0)에 만든다고 가정
+        
+        this.width = width;
+        this.height = height;
+
+        // c#의 다차원배열은 함수호출 형식으로 처리가 되기 때문에 속도가 느리다.
+        //Node[,] test = new Node[height, width];
+        //test[2,1]
+        nodes = new Node[height * width];
+
+        for(int y = 0; y<height; y++)
+        {
+            for(int x = 0; x<width; x++)
+            {
+                int index = GridToIndex(x, y);
+                nodes[index] = new Node(x, y);
+            }
+        }
+    }
+
+    /// <summary>
     /// 특정 위치에 있는 노드를 돌려주는 함수
     /// </summary>
     /// <param name="x">x좌표</param>
@@ -27,6 +57,112 @@ public class GridMap
     /// <returns>x,y에 있는 노드</returns>
     public Node GetGrid(int x, int y)
     {
+        int index = GridToIndex(x, y);
+        Node result = null;
+        if( index != Error_Not_Valid_Position )
+        {
+            result = nodes[index];
+        }
+        return result;
+    }
+
+    public Node GetGrid(Vector2Int gridPos)
+    {
         return null;
     }
+
+    public Node GetGrid(Vector3 worldPos)
+    { 
+        return null; 
+    }
+
+
+    // 유틸리티 함수들 -----------------------------------------------------------------------------
+
+    /// <summary>
+    /// 월드 좌표를 그리드 좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="worldPos">월드 좌표</param>
+    /// <returns>변환된 그리드 좌표</returns>
+    public Vector2Int WorldToGrid(Vector3 worldPos)
+    {
+        return Vector2Int.zero;
+    }
+
+    /// <summary>
+    /// 그리드 좌표를 월드좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="gridPos">그리드 좌표</param>
+    /// <returns>변환된 월드 좌표</returns>
+    public Vector2 GridToWorld(Vector2Int gridPos)
+    {
+        return Vector2.zero;
+    }
+
+    /// <summary>
+    /// 그리즈 좌표를 인덱스로 변경해주는 함수
+    /// </summary>
+    /// <param name="x">x좌표</param>
+    /// <param name="y">y좌표</param>
+    /// <returns>변환된 인덱스 값</returns>
+    private int GridToIndex(int x, int y)
+    {
+        // 왼쪽 위가 원점일 때
+        // index = x + y * width;
+
+        // 왼쪽 아래가 원점일 때
+        // index = x + (height -1 - y) * width;
+
+        int index = Error_Not_Valid_Position;
+        if( IsValidPosition(x,y) )
+        {
+            index = x + (height - 1 - y) * width;
+        }
+
+        return index;
+    }
+
+    /// <summary>
+    /// 입력받은 위치가 맵 내부인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="x">x좌표</param>
+    /// <param name="y">y좌표</param>
+    /// <returns>맵 내부면 true, 맵 밖이면 false</returns>
+    public bool IsValidPosition(int x, int y)
+    {
+        return x >=0 && x < width && y >=0 && y < height;
+    }
+
+    /// <summary>
+    /// 입력받은 위치가 맵 내부인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="gridPos">확인할 좌표</param>
+    /// <returns>맵 내부면 true, 맵 밖이면 false</returns>
+    public bool IsValidPosition(Vector2Int gridPos)
+    {
+        return IsValidPosition(gridPos.x, gridPos.y);
+    }
+
+    public bool IsWall(int x, int y)
+    {
+        return false;
+    }
+
+    public bool IsWall(Vector2Int gridPos)
+    {
+        return false;
+    }
+
+    public bool IsMonster(int x, int y)
+    {
+        return false;
+    }
+
+    public bool IsMonster(Vector2Int gridPos)
+    {
+        return false;
+    }
+
+
+
 }
