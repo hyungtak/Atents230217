@@ -62,9 +62,35 @@ public class GridMap
 
     public GridMap(Tilemap background, Tilemap obstacle)
     {
+        width = background.size.x;
+        height = background.size.y;
+
         // nodes 생성하기
-        // 원점 관련 처리 필요(GridToIndex 수정하기)
-        // 장애물 표시하기(Node의 gridType 벽으로 바꿔주기)
+        nodes = new Node[height * width];
+
+        origin = (Vector2Int)background.origin;
+
+        Vector2Int min = new(background.cellBounds.xMin, background.cellBounds.yMin);
+        Vector2Int max = new(background.cellBounds.xMax, background.cellBounds.yMax);
+
+        for (int y = min.y; y < max.y; y++)
+        {
+            for (int x = min.x; x < max.x; x++)
+            {
+                int index = GridToIndex(x, y);  // 원점 관련 처리 필요(GridToIndex 수정하기)
+                nodes[index] = new Node(x, y);
+
+                // 장애물 표시하기(Node의 gridType 벽으로 바꿔주기)
+                TileBase tile = obstacle.GetTile(new(x, y));
+                if(tile != null)
+                {
+                    Node node = GetNode(x, y);
+                    node.gridType = Node.GridType.Wall;
+                }
+            }
+        }
+
+        this.background = background;
     }
 
     /// <summary>
@@ -125,7 +151,12 @@ public class GridMap
     /// <returns>변환된 그리드 좌표</returns>
     public Vector2Int WorldToGrid(Vector3 worldPos)
     {
-        return new Vector2Int((int)worldPos.x, (int)worldPos.y);
+        if( background != null )
+        {
+            return (Vector2Int)background.WorldToCell(worldPos);
+        }        
+        
+        return new Vector2Int((int)worldPos.x, (int)worldPos.y);        
     }
 
     /// <summary>
@@ -135,6 +166,11 @@ public class GridMap
     /// <returns>변환된 월드 좌표</returns>
     public Vector2 GridToWorld(Vector2Int gridPos)
     {
+        if( background != null )
+        {
+            return background.CellToWorld((Vector3Int)gridPos) + new Vector3(0.5f, 0.5f);
+        }
+        
         return new Vector2(gridPos.x + 0.5f, gridPos.y + 0.5f);
     }
 
@@ -155,7 +191,7 @@ public class GridMap
         int index = Error_Not_Valid_Position;
         if( IsValidPosition(x,y) )
         {
-            index = x + (height - 1 - y) * width;
+            index = (x - origin.x) + ((height - 1) - (y - origin.y)) * width;
         }
 
         return index;
@@ -169,7 +205,7 @@ public class GridMap
     /// <returns>맵 내부면 true, 맵 밖이면 false</returns>
     public bool IsValidPosition(int x, int y)
     {
-        return x >=0 && x < width && y >=0 && y < height;
+        return x >= origin.x && x < (width + origin.x) && y >= origin.y && y < (height + origin.y);
     }
 
     /// <summary>
