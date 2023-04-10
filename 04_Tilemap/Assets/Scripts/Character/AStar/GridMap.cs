@@ -38,6 +38,11 @@ public class GridMap
     /// </summary>
     public const int Error_Not_Valid_Position = -1;
 
+    /// <summary>
+    /// 크기를 기반으로 타일맵을 생성하는 생성자
+    /// </summary>
+    /// <param name="width">가로크기</param>
+    /// <param name="height">세로크기</param>
     public GridMap(int width, int height)
     {
         // world의 (0,0,0)에 만든다고 가정
@@ -60,37 +65,44 @@ public class GridMap
         }
     }
 
+    /// <summary>
+    /// 타일맵을 기반으로 맵을 생성하는 생성자
+    /// </summary>
+    /// <param name="background">배경용 타일맵(가장 큰 타일맵)</param>
+    /// <param name="obstacle">장애물 표시용 타일맵</param>
     public GridMap(Tilemap background, Tilemap obstacle)
     {
-        width = background.size.x;
+        width = background.size.x;  // 백그라운드 크기를 기반으로 가로 세로 설정
         height = background.size.y;
 
         // nodes 생성하기
-        nodes = new Node[height * width];
+        nodes = new Node[height * width];   // 배열 생성
 
-        origin = (Vector2Int)background.origin;
+        origin = (Vector2Int)background.origin; // 배열입장에서 0,0인 그리드 위치를 저장하기
 
+        // 코드 짧게 보이게 하기 위한 임시변수
         Vector2Int min = new(background.cellBounds.xMin, background.cellBounds.yMin);
         Vector2Int max = new(background.cellBounds.xMax, background.cellBounds.yMax);
 
+        // 백그라운드 내부를 한칸씩 순회하기
         for (int y = min.y; y < max.y; y++)
         {
             for (int x = min.x; x < max.x; x++)
             {
-                int index = GridToIndex(x, y);  // 원점 관련 처리 필요(GridToIndex 수정하기)
-                nodes[index] = new Node(x, y);
+                int index = GridToIndex(x, y);  // 그리드 좌표를 기반으로 인덱스 값 가져오기
 
-                // 장애물 표시하기(Node의 gridType 벽으로 바꿔주기)
-                TileBase tile = obstacle.GetTile(new(x, y));
-                if(tile != null)
-                {
-                    Node node = GetNode(x, y);
-                    node.gridType = Node.GridType.Wall;
+                Node.GridType tileType = Node.GridType.Plain;   // 기본 타일 타입 설정
+                TileBase tile = obstacle.GetTile(new(x, y));    // 장애물 타일 가져오기 시도
+                if(tile != null)                    // 장애물 타일이 있으면
+                {                    
+                    tileType = Node.GridType.Wall;  // 타일의 타입을 벽으로 설정
                 }
+
+                nodes[index] = new Node(x, y, tileType);        // 해당 인덱스에 노드 생성해서 배열에 넣기
             }
         }
 
-        this.background = background;
+        this.background = background;           // 백그라운드 저장
     }
 
     /// <summary>
