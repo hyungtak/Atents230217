@@ -20,6 +20,7 @@ public class Test_AStarTilemapSlime : Test_Base
         if(slime == null)
             slime = FindObjectOfType<Slime>();
         slime.Initialize(map, Vector3.zero);
+        slime.PathLine.transform.SetParent(null);
     }
 
     protected override void OnEnable()

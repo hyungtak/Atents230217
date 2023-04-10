@@ -13,6 +13,7 @@ public class Slime : PoolObject
     List<Vector2Int> path;
 
     PathLine pathLine;
+    public PathLine PathLine => pathLine;
 
     Vector2Int Position => map.WorldToGrid(transform.position);
 
@@ -64,6 +65,11 @@ public class Slime : PoolObject
     {
         ResetShaderProperties();            // 스폰 될 때 셰이더 프로퍼티 초기화
         StartCoroutine(StartPhase());       // 페이즈 시작
+    }
+
+    private void Update()
+    {
+        MoveUpdate();
     }
 
     /// <summary>
@@ -169,5 +175,26 @@ public class Slime : PoolObject
     {
         path = AStar.PathFind(map, Position, goal);
         pathLine.DrawPath(map, path);
+    }
+
+    private void MoveUpdate()
+    {
+        if(path != null && path.Count > 0)
+        {
+            Vector2Int destGrid = path[0];
+
+            Vector3 dest = map.GridToWorld(destGrid);
+            Vector3 dir = dest - transform.position;
+
+            if(dir.sqrMagnitude < 0.001f)
+            {
+                transform.position = dest;
+                path.RemoveAt(0);
+            }
+            else
+            {
+                transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);
+            }
+        }
     }
 }
