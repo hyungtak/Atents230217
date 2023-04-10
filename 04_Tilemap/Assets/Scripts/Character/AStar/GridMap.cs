@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 // 그리드 좌표(0,0) = 월드 좌표(0.5f, 0.5f, 0);
 // 그리드 좌표의 한칸의 간격은 1
@@ -21,6 +22,16 @@ public class GridMap
     /// 맵의 세로 길이
     /// </summary>
     int height;
+
+    /// <summary>
+    /// 맵 원점의 그리드 좌표
+    /// </summary>
+    Vector2Int origin;
+
+    /// <summary>
+    /// 배경용 타일맵
+    /// </summary>
+    Tilemap background;
 
     /// <summary>
     /// 위치 입력이 잘못되었다는 것을 표시하기 위한 상수
@@ -47,6 +58,13 @@ public class GridMap
                 nodes[index] = new Node(x, y);
             }
         }
+    }
+
+    public GridMap(Tilemap background, Tilemap obstacle)
+    {
+        // nodes 생성하기
+        // 원점 관련 처리 필요(GridToIndex 수정하기)
+        // 장애물 표시하기(Node의 gridType 벽으로 바꿔주기)
     }
 
     /// <summary>

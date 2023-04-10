@@ -16,7 +16,7 @@ public class Test_AStar : Test_Base
         List<Vector2Int> path = AStar.PathFind(map, new(0, 0), new(3, 2));
 
         string pathStr = "Path : ";
-        foreach(var pos in path)
+        foreach (var pos in path)
         {
             pathStr += $" ({pos.x}, {pos.y}) ->";
         }
