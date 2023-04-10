@@ -1,11 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Slime : PoolObject
 {
+    // 이동 관련 변수들 ----------------------------------------------------------------------------
+    public float moveSpeed = 2.0f;
+
+    GridMap map;
+
+    List<Vector2Int> path;
+
+    PathLine pathLine;
+
+    Vector2Int Position => map.WorldToGrid(transform.position);
+
+    // 셰이더용 변수들 -----------------------------------------------------------------------------
     /// <summary>
     /// 페이즈 전체 진행 시간
     /// </summary>
@@ -41,6 +52,8 @@ public class Slime : PoolObject
 
     private void Awake()
     {
+        pathLine = GetComponentInChildren<PathLine>();
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         mainMaterial = spriteRenderer.material;
 
@@ -143,5 +156,18 @@ public class Slime : PoolObject
     void Die()
     {
         gameObject.SetActive(false);
+    }
+
+
+    public void Initialize(GridMap gridMap, Vector3 pos)
+    {
+        map = gridMap;
+        transform.position = map.GridToWorld(map.WorldToGrid(pos));
+    }
+
+    public void SetDestination(Vector2Int goal)
+    {
+        path = AStar.PathFind(map, Position, goal);
+        pathLine.DrawPath(map, path);
     }
 }
