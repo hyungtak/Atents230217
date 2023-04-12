@@ -1155,6 +1155,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2959875987687825461, guid: 3d172cb6596e7b04ca82b11016c2152e, type: 3}
+      propertyPath: phaseDuration
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8106497872437697317, guid: 3d172cb6596e7b04ca82b11016c2152e, type: 3}
       propertyPath: m_RootOrder
       value: 3

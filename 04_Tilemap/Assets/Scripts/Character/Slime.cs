@@ -5,18 +5,48 @@ using UnityEngine;
 
 public class Slime : PoolObject
 {
-    // 이동 관련 변수들 ----------------------------------------------------------------------------
-    public float moveSpeed = 2.0f;
-
-    GridMap map;
-
-    List<Vector2Int> path;
-
-    PathLine pathLine;
-    public PathLine PathLine => pathLine;
-
+    // 일반 변수들 ---------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 슬라임이 활동 중인지 아닌지 표시하는 변수
+    /// </summary>
+    bool isActivate = false;
+    
+    /// <summary>
+    /// 위치 확인용 프로퍼티(그리드 좌표)
+    /// </summary>
     Vector2Int Position => map.WorldToGrid(transform.position);
 
+
+    // 이동 관련 변수들 ----------------------------------------------------------------------------
+
+    /// <summary>
+    /// 이동 속도
+    /// </summary>
+    public float moveSpeed = 2.0f;
+
+    /// <summary>
+    /// 이 슬라임이 있는 그리드 맵
+    /// </summary>
+    GridMap map;
+
+    /// <summary>
+    /// 슬라임이 이동할 경로
+    /// </summary>
+    List<Vector2Int> path;
+
+    /// <summary>
+    /// 슬라임이 이동할 경로를 그리는 클래스
+    /// </summary>
+    PathLine pathLine;
+    /// <summary>
+    /// 경로 그리는 클래스 접근용 프로퍼티
+    /// </summary>
+    public PathLine PathLine => pathLine;
+
+    /// <summary>
+    /// 목적지 도착했을 때 실행되는 델리게이트
+    /// </summary>
     Action OnGoalArrive;
 
     // 셰이더용 변수들 -----------------------------------------------------------------------------
@@ -60,6 +90,10 @@ public class Slime : PoolObject
         spriteRenderer = GetComponent<SpriteRenderer>();
         mainMaterial = spriteRenderer.material;
 
+        onPhaseEnd += () =>
+        {
+            isActivate = true;  // 페이즈가 끝나면 isActivate를 활성화
+        };
         onDissolveEnd += Die;   // 디졸브가 끝나면 죽게 만들기
 
         OnGoalArrive += () =>
@@ -80,6 +114,7 @@ public class Slime : PoolObject
 
     private void OnEnable()
     {
+        isActivate = false;
         ResetShaderProperties();            // 스폰 될 때 셰이더 프로퍼티 초기화
         StartCoroutine(StartPhase());       // 페이즈 시작
     }
@@ -170,7 +205,11 @@ public class Slime : PoolObject
     /// </summary>
     public void OnAttacked()
     {
-        StartCoroutine(StartDissolve());
+        if (isActivate)
+        {
+            isActivate = false;                 // 활성화 끄기
+            StartCoroutine(StartDissolve());    // 디졸브 셰이더 켜기
+        }
     }
 
     /// <summary>
@@ -207,29 +246,33 @@ public class Slime : PoolObject
     /// </summary>
     private void MoveUpdate()
     {
-        if(path != null && path.Count > 0)      // path가 있고 path의 갯수가 0보다 크다.
+        if( isActivate )    // 활성화 상태일 때만 움직이기
         {
-            Vector2Int destGrid = path[0];      // path의 [0]번째를 중간 목적지로 설정
-
-            Vector3 dest = map.GridToWorld(destGrid);   // 중간 목적지의 월드 좌표 계산
-            Vector3 dir = dest - transform.position;    // 방향 결정
-
-            if(dir.sqrMagnitude < 0.001f)       // 남은 거리 확인
+            if (path != null && path.Count > 0)      // path가 있고 path의 갯수가 0보다 크다.
             {
-                // 거의 도착한 상태
-                transform.position = dest;      // 중간 도착지점으로 위치 옮기기
-                path.RemoveAt(0);               // path의 0번째 제거
+                Vector2Int destGrid = path[0];      // path의 [0]번째를 중간 목적지로 설정
+
+                Vector3 dest = map.GridToWorld(destGrid);   // 중간 목적지의 월드 좌표 계산
+                Vector3 dir = dest - transform.position;    // 방향 결정
+
+                if (dir.sqrMagnitude < 0.001f)       // 남은 거리 확인
+                {
+                    // 거의 도착한 상태
+                    transform.position = dest;      // 중간 도착지점으로 위치 옮기기
+                    path.RemoveAt(0);               // path의 0번째 제거
+                }
+                else
+                {
+                    // 아직 거리가 남아있는 상태
+                    transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 중간 지점까지 계속 이동
+                }
             }
             else
             {
-                // 아직 거리가 남아있는 상태
-                transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 중간 지점까지 계속 이동
+                // path 따라서 도착
+                OnGoalArrive?.Invoke();
             }
         }
-        else
-        {
-            // path 따라서 도착
-            OnGoalArrive?.Invoke();
-        }
+        
     }
 }
