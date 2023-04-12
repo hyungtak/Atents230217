@@ -17,6 +17,8 @@ public class Slime : PoolObject
     /// </summary>
     Vector2Int Position => map.WorldToGrid(transform.position);
 
+    public Action onDie;
+
 
     // 이동 관련 변수들 ----------------------------------------------------------------------------
 
@@ -217,6 +219,8 @@ public class Slime : PoolObject
     /// </summary>
     void Die()
     {
+        onDie?.Invoke();
+        onDie = null;
         gameObject.SetActive(false);
     }
 
