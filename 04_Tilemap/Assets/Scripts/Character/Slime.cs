@@ -224,7 +224,7 @@ public class Slime : PoolObject
     /// 슬라임 초기화용 함수
     /// </summary>
     /// <param name="gridMap">그리드 맵</param>
-    /// <param name="pos">시작 위치의 그리드 좌표</param>
+    /// <param name="pos">시작 위치의 월드 좌표</param>
     public void Initialize(GridMap gridMap, Vector3 pos)
     {
         map = gridMap;  // 맵 저장
