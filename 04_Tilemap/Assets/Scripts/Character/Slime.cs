@@ -47,6 +47,29 @@ public class Slime : PoolObject
     public PathLine PathLine => pathLine;
 
     /// <summary>
+    /// 이 슬라임이 현재 위치하고 있는 노드
+    /// </summary>
+    Node current;
+    Node Current
+    {
+        get => current;
+        set
+        {
+            if (current != value)
+            {
+                if(current != null)
+                {
+                    current.gridType = Node.GridType.Plain; // 이전 노드를 Plain으로 되돌리기
+                }
+                current = value;
+                current.gridType = Node.GridType.Monster;   // 새 currrent를 Monster로 설정
+
+                spriteRenderer.sortingOrder = -current.y;   // 겹쳤을 때 아래쪽 슬라임이 위에 그려지도록 설정
+            }
+        }
+    }
+
+    /// <summary>
     /// 목적지 도착했을 때 실행되는 델리게이트
     /// </summary>
     Action OnGoalArrive;
@@ -237,6 +260,7 @@ public class Slime : PoolObject
     {
         map = gridMap;  // 맵 저장
         transform.position = map.GridToWorld(map.WorldToGrid(pos)); // 시작 위치에 배치
+        Current = map.GetNode(pos);
     }
 
     /// <summary>
@@ -246,7 +270,7 @@ public class Slime : PoolObject
     public void SetDestination(Vector2Int goal)
     {
         path = AStar.PathFind(map, Position, goal); // 길찾기해서 경로 저장하기
-        PathLine.DrawPath(map, path);               // 경로 따라서 그리기
+        PathLine.DrawPath(map, path);               // 경로 따라서 그리기        
     }
 
     /// <summary>
@@ -260,20 +284,25 @@ public class Slime : PoolObject
             {
                 Vector2Int destGrid = path[0];      // path의 [0]번째를 중간 목적지로 설정
 
-                Vector3 dest = map.GridToWorld(destGrid);   // 중간 목적지의 월드 좌표 계산
-                Vector3 dir = dest - transform.position;    // 방향 결정
+                // destGrid에 몬스터가 없거나, destGrid가 current가 일 때(내 위치)만 이동 가능
+                if ( !map.IsMonster(destGrid) || map.GetNode(destGrid) == Current )
+                {
+                    Vector3 dest = map.GridToWorld(destGrid);   // 중간 목적지의 월드 좌표 계산
+                    Vector3 dir = dest - transform.position;    // 방향 결정
 
-                if (dir.sqrMagnitude < 0.001f)       // 남은 거리 확인
-                {
-                    // 거의 도착한 상태
-                    transform.position = dest;      // 중간 도착지점으로 위치 옮기기
-                    path.RemoveAt(0);               // path의 0번째 제거
-                }
-                else
-                {
-                    // 아직 거리가 남아있는 상태
-                    transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 중간 지점까지 계속 이동
-                }
+                    if (dir.sqrMagnitude < 0.001f)       // 남은 거리 확인
+                    {
+                        // 거의 도착한 상태
+                        transform.position = dest;      // 중간 도착지점으로 위치 옮기기
+                        path.RemoveAt(0);               // path의 0번째 제거
+                    }
+                    else
+                    {
+                        // 아직 거리가 남아있는 상태
+                        transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 중간 지점까지 계속 이동
+                        Current = map.GetNode(transform.position);  // 현재 노드 변경 시도
+                    }
+                }                
             }
             else
             {
