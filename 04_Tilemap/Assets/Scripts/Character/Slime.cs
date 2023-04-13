@@ -95,6 +95,7 @@ public class Slime : PoolObject
         onPhaseEnd += () =>
         {
             isActivate = true;  // 페이즈가 끝나면 isActivate를 활성화
+            PathLine.gameObject.SetActive(true);
         };
         onDissolveEnd += Die;   // 디졸브가 끝나면 죽게 만들기
 
@@ -219,6 +220,9 @@ public class Slime : PoolObject
     /// </summary>
     void Die()
     {
+        path.Clear();           // 경로를 다 비우기
+        PathLine.ClearPath();   // 라인랜더러 초기화 하고 오브젝트 비활성화
+
         onDie?.Invoke();
         onDie = null;
         gameObject.SetActive(false);
@@ -242,7 +246,7 @@ public class Slime : PoolObject
     public void SetDestination(Vector2Int goal)
     {
         path = AStar.PathFind(map, Position, goal); // 길찾기해서 경로 저장하기
-        pathLine.DrawPath(map, path);               // 경로 따라서 그리기
+        PathLine.DrawPath(map, path);               // 경로 따라서 그리기
     }
 
     /// <summary>
