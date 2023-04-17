@@ -18,17 +18,12 @@ public class GameManager : Singleton<GameManager>
     MapManager mapManager;
     public MapManager MapManager => mapManager;
 
-    int mainSceneIndex = -1;
-
     protected override void PreInitialize()
     {
         base.PreInitialize();
 
-        //Scene mainScene = SceneManager.GetActiveScene();            //게임 메니저가 있는 씬
-        //mainSceneIndex = mainScene.buildIndex;                      //게임 매니저가 있던 씬의 인덱스 저장
-
         mapManager = GetComponent<MapManager>();
-        mapManager.PreInitialize();
+        mapManager.PreInitialize(); 
     }
 
     protected override void Initialize()
