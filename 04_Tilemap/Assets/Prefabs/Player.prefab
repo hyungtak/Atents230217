@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7309942910571485488}
   - component: {fileID: 3215819971415003023}
-  m_Layer: 0
+  - component: {fileID: 474641048}
+  m_Layer: 7
   m_Name: AttackArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,6 +49,18 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.75, y: 1}
   m_Direction: 0
+--- !u!114 &474641048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373879071899877641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905668fd56194964abfb2a728bd89040, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5188117309013576191
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +169,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 768589391
-  m_SortingLayer: 6
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: -1330660279, guid: 9c194e1cc2d60054182c92f959bb86f1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

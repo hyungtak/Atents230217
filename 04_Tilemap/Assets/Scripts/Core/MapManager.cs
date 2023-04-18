@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +86,7 @@ public class MapManager : MonoBehaviour
     {
         foreach (var index in loadWorkComplete)      // 완료된 것은 loadWork에서 제거
         {
-            loadWork.Remove(index);
+            loadWork.RemoveAll((x) => x == index);  // 중복으로 추가된 것을 모두 삭제
         }
         loadWorkComplete.Clear();
         foreach (var index in loadWork)             // 남아있는 loadWork를 로딩 시도
@@ -95,7 +96,7 @@ public class MapManager : MonoBehaviour
 
         foreach (var index in unloadWorkComplete)  // 완료된 것은 unloadWork에서 제거
         {
-            unloadWork.Remove(index);
+            unloadWork.RemoveAll((x) => x == index);    // 중복으로 추가된 것을 모두 삭제
         }
         unloadWorkComplete.Clear();
         foreach (var index in unloadWork)          // 남아있는 unloadWork를 로딩 해제 시도
@@ -126,8 +127,15 @@ public class MapManager : MonoBehaviour
         {
             sceneLoadStates[i] = SceneLoadState.Unload;
         }
-        
-        //플레이어 기준으로 플레이어 주변의 맵만 로딩하기
+
+        Player player = GameManager.Inst.Player;
+        if(player != null)
+        {
+            player.onMapMoved += (gridPos) => RefreshScenes(gridPos.x, gridPos.y);  // 맵 변경될 때마다 주변 로딩 요청
+            Vector2Int grid = WorldToGreed(player.transform.position);
+            RequestAsyncSceneLoad(grid.x, grid.y);                                  // 플레이어 존재 맵을 최우선으로 로딩
+            RefreshScenes(grid.x, grid.y);                                          // 주변 위치 로딩 요청
+        }
     }
 
     int GetIndex(int x, int y)
@@ -135,6 +143,11 @@ public class MapManager : MonoBehaviour
         return x + WidthCount * y;
     }
 
+    /// <summary>
+    /// 씬을 비동기로 로딩할 것을 요청하는 함수
+    /// </summary>
+    /// <param name="x">x좌표(맵의 위치)</param>
+    /// <param name="y">y좌표(맵의 위치)</param>
     void RequestAsyncSceneLoad(int x, int y)
     {
         int index = GetIndex(x, y);
@@ -159,6 +172,7 @@ public class MapManager : MonoBehaviour
             };
         }
     }
+
 
     void RequestAsyncSceneUnload(int x, int y)
     {
@@ -200,15 +214,54 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    void WorldToGreed(Vector2 pos)
+    /// <summary>
+    /// 월드 좌표가 어떤 그리드에 있는지 계산하는 함수
+    /// </summary>
+    /// <param name="worldPos">확일할 월드 좌표</param>
+    /// <returns>그리드 좌표(맵 기준)</returns>
+    public Vector2Int WorldToGreed(Vector3 worldPos)
     {
-        pos -= totalOrigin;
-        float greedX = pos.x / mapWidthLenght;          //맵의 x좌표
-        float greedY = pos.y / mapHeightLength;         //맵의 y좌표
-        int index = GetIndex((int)greedX, (int)greedY);     //맵의 인덱스
-        float mapGreedX = pos.x % mapWidthLenght;       //맵 내 x좌표
-        float mapGreedY = pos.y % mapHeightLength;      //맵 내 y좌표
-    }   
+        Vector2 offset = (Vector2)worldPos - totalOrigin;
+        return new Vector2Int((int)(offset.x / mapWidthLenght), (int)(offset.y / mapHeightLength));
+    }
+
+    /// <summary>
+    /// 지정된 그리드 위치(맵) 주변은 로딩을 하고, 그 외에는 전부 로딩을 해제하는 함수
+    /// </summary>
+    /// <param name="GridX"></param>
+    /// <param name="GridY"></param>
+    void RefreshScenes(int GridX, int GridY)
+    {
+
+        int minX = Mathf.Max(0, GridX - 1);
+        int maxX = Mathf.Min(GridX + 2, WidthCount);
+        int minY = Mathf.Max(0, GridY - 1);
+        int maxY = Mathf.Min(GridY + 2, HeightCount);
+
+        List<Vector2Int> open = new List<Vector2Int>(WidthCount*HeightCount);
+        for(int i = minX; i < maxX; i++)
+        {
+            for(int j = minY; j < maxY; j++)
+            {
+                RequestAsyncSceneLoad(i, j);
+                open.Add(new(i, j));
+            }
+        }
+
+        Vector2Int target = new Vector2Int();
+        for (int y = 0; y < HeightCount; y++)
+        {
+            for(int x= 0; x < WidthCount; x++)
+            {
+                target.x = x;
+                target.y = y;
+                if (open.Exists((x) => x == target))
+                {
+                    RequestAsyncSceneUnload(x, y);
+                }
+            }
+        }
+    }
 
 #if UNITY_EDITOR
     public void Test_LoadScene(int x, int y)
