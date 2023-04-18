@@ -54,7 +54,7 @@ public class Slime : PoolObject
     /// <summary>
     /// 슬라임이 이동할 경로
     /// </summary>
-    List<Vector2Int> path;
+    List<Vector2Int> path = new List<Vector2Int>();
 
     /// <summary>
     /// 다른 슬라임에 의해 경로가 막혔을 때 기다린 시간

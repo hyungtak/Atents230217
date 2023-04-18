@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -131,7 +132,10 @@ public class MapManager : MonoBehaviour
         Player player = GameManager.Inst.Player;
         if(player != null)
         {
-            player.onMapMoved += (gridPos) => RefreshScenes(gridPos.x, gridPos.y);  // 맵 변경될 때마다 주변 로딩 요청
+            player.onMapMoved += (gridPos) =>
+            {
+                RefreshScenes(gridPos.x, gridPos.y);  // 맵 변경될 때마다 주변 로딩 요청
+            };
             Vector2Int grid = WorldToGreed(player.transform.position);
             RequestAsyncSceneLoad(grid.x, grid.y);                                  // 플레이어 존재 맵을 최우선으로 로딩
             RefreshScenes(grid.x, grid.y);                                          // 주변 위치 로딩 요청
@@ -200,12 +204,12 @@ public class MapManager : MonoBehaviour
 
     void AsyncSceneUnload(int index)
     {
-        if (sceneLoadStates[index] == SceneLoadState.Loaded)
+        if (sceneLoadStates[index] == SceneLoadState.Loaded)         // 로딩 완료된 상태일 때만
         {
-            sceneLoadStates[index] = SceneLoadState.PendingUnload;
-            //비동기로 언로드 시작
+            sceneLoadStates[index] = SceneLoadState.PendingUnload;   // 언로드 진행중이라고 표시
+            // 비동기로 언로드 시작
             AsyncOperation async = SceneManager.UnloadSceneAsync(sceneNames[index]);
-            // 언로드가 끝나면 Unload상태로 변경하는 람다 함수를 델리게이트에 추가.
+            // 언로드가 끝나면 Unload 상태로 변경하는 람다함수를 델리게이트에 추가
             async.completed += (_) =>
             {
                 sceneLoadStates[index] = SceneLoadState.Unload;      // 상태를 Unload로 변경
@@ -228,36 +232,36 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// 지정된 그리드 위치(맵) 주변은 로딩을 하고, 그 외에는 전부 로딩을 해제하는 함수
     /// </summary>
-    /// <param name="GridX"></param>
-    /// <param name="GridY"></param>
-    void RefreshScenes(int GridX, int GridY)
+    /// <param name="gridX"></param>
+    /// <param name="gridY"></param>
+    void RefreshScenes(int gridX, int gridY)
     {
+        int startX = Mathf.Max(0, gridX - 1);           // 최소값은 0
+        int endX = Mathf.Min(WidthCount, gridX + 2);    // 최대값은 WidthCount
+        int startY = Mathf.Max(0, gridY - 1);           // 최소값은 0
+        int endY = Mathf.Min(HeightCount, gridY + 2);   // 최대값은 HeightCount
 
-        int minX = Mathf.Max(0, GridX - 1);
-        int maxX = Mathf.Min(GridX + 2, WidthCount);
-        int minY = Mathf.Max(0, GridY - 1);
-        int maxY = Mathf.Min(GridY + 2, HeightCount);
-
-        List<Vector2Int> open = new List<Vector2Int>(WidthCount*HeightCount);
-        for(int i = minX; i < maxX; i++)
+        List<Vector2Int> open = new List<Vector2Int>(WidthCount * HeightCount);
+        for (int y = startY; y < endY; y++)
         {
-            for(int j = minY; j < maxY; j++)
+            for (int x = startX; x < endX; x++)
             {
-                RequestAsyncSceneLoad(i, j);
-                open.Add(new(i, j));
+                RequestAsyncSceneLoad(x, y);    // 적정 범위 안에 있는 것을 로드요청하고
+                open.Add(new(x, y));            // 열린 것 목록에 추가
             }
         }
 
-        Vector2Int target = new Vector2Int();
+        // 그 외는 모두 로딩이 해제되어야 한다.
+        Vector2Int target = new Vector2Int();   // 매번 new하는 것을 피하는 것이 목적
         for (int y = 0; y < HeightCount; y++)
         {
-            for(int x= 0; x < WidthCount; x++)
+            for (int x = 0; x < WidthCount; x++)
             {
                 target.x = x;
                 target.y = y;
-                if (open.Exists((x) => x == target))
+                if (!open.Exists((x) => x == target))   // open에 없으면
                 {
-                    RequestAsyncSceneUnload(x, y);
+                    RequestAsyncSceneUnload(x, y);      // 로드 해제 요청
                 }
             }
         }
