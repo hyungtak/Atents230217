@@ -88,6 +88,9 @@ public class Spawner : MonoBehaviour
             slime.onDie += () =>
             {
                 count--;
+                // 스포너에서 생성된 갯수 감소
+                manager.Player.AddLifeTime(slime.lifeTimeBonus);    // 플레이어의 수명 추가
+                manager.Player.AddKillCount();                      // 플레이어의 킬 카운트 추가
             };
             slime.transform.SetParent(transform);
             manager.SlimeInitialize(slime, spawnPos);
