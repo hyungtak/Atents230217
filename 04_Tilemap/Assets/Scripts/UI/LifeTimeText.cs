@@ -3,30 +3,60 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
-
 public class LifeTimeText : MonoBehaviour
 {
-    // 시간 변화에 따라 남아있는 플레이어의 수명 출력하기(소수점 둘째자리까지 출력)
+    public float speed = 1.0f;
 
     TextMeshProUGUI textUI;
     float maxLifeTime;
+
+    float targetValue;
+    float currentValue;
 
     private void Awake()
     {
         textUI = GetComponent<TextMeshProUGUI>();
     }
-
     private void Start()
     {
         Player player = GameManager.Inst.Player;
         player.onLifeTimeChange += OnLifeTimeChange;
         maxLifeTime = player.maxLifeTime;
         textUI.text = $"{maxLifeTime:f2} Sec";
+
+        targetValue = maxLifeTime;
+        currentValue = maxLifeTime;
     }
+
+    //private void Update()
+    //{
+    //    if (currentValue > targetValue)
+    //    {
+    //        //slider.value가 줄어야 한다.
+    //        currentValue -= Time.deltaTime * speed;
+    //        if (currentValue < targetValue)
+    //        {
+    //            currentValue = MathF.Max(targetValue, 0);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        //slider.value가 늘어야 한다.
+    //        currentValue += Time.deltaTime * speed;
+
+    //        if (currentValue > targetValue)
+    //        {
+    //            currentValue = MathF.Max(targetValue, 1);
+    //        }
+    //    }
+    //    textUI.text = $"{(currentValue):f2} Sec";
+
+    //}
 
     private void OnLifeTimeChange(float ratio)
     {
         textUI.text = $"{(maxLifeTime * ratio):f2} Sec";
+
+        //targetValue = maxLifeTime * ratio;
     }
 }

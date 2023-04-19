@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 잡은 슬라임 수
     /// </summary>
-    int killCount = 0;
+    int killCount = int.MinValue;
     
     public int KillCount
     {
@@ -353,7 +353,8 @@ public class Player : MonoBehaviour
     {
         lifeTime = 0.0f;
         isDead = true;
-        onDie?.Invoke(totalPlayTime, killCount);
+        inputActions.Player.Disable();
+        onDie?.Invoke(totalPlayTime, KillCount);
     }
 
     /// <summary>
@@ -362,7 +363,11 @@ public class Player : MonoBehaviour
     /// <param name="time">추가되는 수명</param>
     public void AddLifeTime(float time)
     {
-        LifeTime += time;
+        if(!isDead)
+        {
+            LifeTime += time;
+
+        }
     }
     /// <summary>
     /// 킬카운트 1증가 시키는 함수
